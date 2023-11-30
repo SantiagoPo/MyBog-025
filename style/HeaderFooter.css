@@ -10,7 +10,7 @@ html, body {
 }
 
 .wrapper {
-    min-height: 85%;
+    height: 85%;
     position: relative;
 }
 

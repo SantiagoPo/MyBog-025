@@ -1,15 +1,15 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <?php
-include_once('../config/conexion.php');
+
+$loginExitoso = false;
+$credencialesIncorrectas = false;
+$cuentaInexistente = false;
+$contrasenaIncorrecta = false;
 
 try {
     $email = trim($_POST['Email']);
     $password = trim($_POST['Password']);
 
-    // Establecer la conexión a la base de datos (asegúrate de que esta parte esté en conexion.php)
-    // $conexion = mysqli_connect($db_host, $db_usuario, $db_contrasena, $db_nombre);
-
-    // Verificar si la conexión a la base de datos fue exitosa
     if (!$conexion) {
         throw new Exception("La conexión a la base de datos falló: " . mysqli_connect_error());
     }
@@ -36,21 +36,20 @@ try {
             $_SESSION['nombres'] = $nombresDelUsuario;
             $_SESSION['apellidos'] = $apellidosDelUsuario;
             $_SESSION['email'] = $emailDelUsuario;
-            echo '<div class="alert alert-success" role="alert">
-            Inicio de sesión exitoso. Serás redireccionado en 3 segundos.
-            </div>';
-            echo '<script> setTimeout(function(){ window.location.href = "../index.php"; }, 3000); </script>';
+
+            $loginExitoso = true;
+
+            echo '<script> setTimeout(function(){ window.location.href = "index.php"; }, 1000); </script>';
         } else {
-            throw new Exception("Credenciales incorrectas. Inténtalo de nuevo.");
+            // Contraseña incorrecta
+            $contrasenaIncorrecta = true;
+            throw new Exception("Contraseña incorrecta");
         }
     } else {
-        throw new Exception("Credenciales incorrectas. Inténtalo de nuevo.");
+        // Usuario no encontrado
+        $cuentaInexistente = true;
+        throw new Exception("Cuenta inexistente");
     }
 } catch (Exception $e) {
-    echo '<div class="alert alert-danger" role="alert">
-            Ha ocurrido un error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.
-          </div>';
-    echo '<script> setTimeout(function(){ window.location.href = "../main.php"; }, 3000); </script>';
-    exit;
 }
 ?>

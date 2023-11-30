@@ -21,17 +21,6 @@ require_once('./config/conexion.php');
             overflow: hidden;
             margin-bottom: 20px;
             box-shadow: 15px 5px 18px rgba(0, 0, 0, 0.1);
-            /* Agregado: Sombra para las tarjetas */
-        }
-
-        .card h3 {
-            font-size: 24px;
-        }
-
-        .card .parrafo {
-            max-height: 200px;
-            overflow: hidden;
-            margin-bottom: 10px;
         }
 
         .card h5 {
@@ -40,7 +29,8 @@ require_once('./config/conexion.php');
 
         .card img {
             width: 100%;
-            height: 250px;
+            height: 200px;
+            /* Establecer una altura fija para la imagen */
             object-fit: cover;
         }
 
@@ -48,14 +38,32 @@ require_once('./config/conexion.php');
             padding: 15px;
         }
 
-        #searchInput {
-            margin-bottom: 20px;
+        .card .parrafo {
+            height: 80px;
+            /* Establecer una altura fija para el párrafo */
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .card .card-title {
+            height: 40px;
+            /* Establecer una altura fija para el título */
+            overflow: hidden;
+        }
+
+        .card .card-subtitle {
+            height: 30px;
+            /* Establecer una altura fija para el subtítulo */
+            overflow: hidden;
+        }
+
+        .card .btn {
+            margin-top: 10px;
         }
 
         .card-deck .card {
             margin-bottom: 20px;
             width: 300px;
-            /* Ajustado el ancho de la tarjeta */
         }
 
         .pagination {
@@ -121,7 +129,7 @@ require_once('./config/conexion.php');
             <!-- Contenido principal -->
             <div class="inicio">
                 <!-- Barra de búsqueda -->
-                <input type="text" id="searchInput" placeholder="Buscar tarjetas">
+
 
                 <!-- Sección de tarjetas -->
                 <div id="mundo_aventura">
@@ -144,33 +152,33 @@ require_once('./config/conexion.php');
 
                                 // Tu bucle de tarjetas de discotecas
                                 foreach ($discotecas as $discoteca):
-                            ?>
-                            <!-- Tarjeta de discoteca -->
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <!-- Contenido de la tarjeta -->
-
-                                    <!-- Enlace para abrir informacion.php con el nombre de la localidad en la URL -->
-                                    <?php
-                                        $imagenNombre = rawurlencode($discoteca['Nombres_de_discotecas']);
-                                        $imagenUrl = "./Imagenes/discotecas/{$imagenNombre}.jpg"; // Ajusta la extensión según el formato de tus imágenes
                                     ?>
-                                    <img class="card-img-top" src="<?php echo $imagenUrl; ?>"
-                                        alt="<?php echo htmlspecialchars($discoteca['Nombres_de_discotecas']); ?>">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <?php echo htmlspecialchars($discoteca['Nombres_de_discotecas']); ?>
-                                        </h5>
-                                        <h5 class="card-subtitle mb-2 text-muted">
-                                            <?php echo htmlspecialchars($discoteca['Ubicacion_de_discotecas']); ?>
-                                        </h5>
-                                        <!-- Puedes agregar más detalles según tu estructura de base de datos -->
-                                        <a href="resultado.php?tabla=discotecas&nombre=<?php echo urlencode($discoteca['Nombres_de_discotecas']); ?>"
+                                    <!-- Tarjeta de discoteca -->
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <!-- Contenido de la tarjeta -->
+
+                                            <!-- Enlace para abrir informacion.php con el nombre de la localidad en la URL -->
+                                            <?php
+                                            $imagenNombre = rawurlencode($discoteca['Nombres_de_discotecas']);
+                                            $imagenUrl = "./Imagenes/discotecas/{$imagenNombre}.jpg"; // Ajusta la extensión según el formato de tus imágenes
+                                            ?>
+                                            <img class="card-img-top" src="<?php echo $imagenUrl; ?>"
+                                                alt="<?php echo htmlspecialchars($discoteca['Nombres_de_discotecas']); ?>">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <?php echo htmlspecialchars($discoteca['Nombres_de_discotecas']); ?>
+                                                </h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">
+                                                    <?php echo htmlspecialchars($discoteca['Ubicacion_de_discotecas']); ?>
+                                                </h6>
+                                                <!-- Puedes agregar más detalles según tu estructura de base de datos -->
+                                                <a href="resultado.php?tabla=discotecas&nombre=<?php echo urlencode($discoteca['Nombres_de_discotecas']); ?>"
                                                     class="btn btn-primary">Más información</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <?php
+                                    <?php
                                 endforeach;
                             } else {
                                 echo '<p>No se encontraron discotecas para la localidad seleccionada.</p>';
@@ -185,9 +193,11 @@ require_once('./config/conexion.php');
                 <footer class="footer">
                     <nav>
                         <ul>
-                            <li><a href="#" data-toggle="modal" data-target="#modalPoliticaPrivacidad">Política de privacidad</a>
+                            <li><a href="#" data-toggle="modal" data-target="#modalPoliticaPrivacidad">Política de
+                                    privacidad</a>
                             </li>
-                            <li><a href="#" data-toggle="modal" data-target="#modalTerminosCondiciones">Términos y condiciones</a>
+                            <li><a href="#" data-toggle="modal" data-target="#modalTerminosCondiciones">Términos y
+                                    condiciones</a>
                             </li>
                             <li><a href="#" data-toggle="modal" data-target="#modalContacto">Contacto</a></li>
                             <?php
@@ -206,13 +216,15 @@ require_once('./config/conexion.php');
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="myModalLabel">Mensaje</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
                                     </div>
                                     <div class="modal-body">
                                         Debes estar logueado/registrado para utilizar este servicio.
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">Cerrar</button>
                                     </div>
                                 </div>
                             </div>

@@ -1,8 +1,10 @@
 <?php
 require_once('./config/conexion.php');
 
-
-
+// Verificar si se ha enviado el formulario
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    include_once('./php/login.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +55,7 @@ require_once('./config/conexion.php');
                     <div class="col-md-6 order-md-1">
                         <div class="login-box">
                             <h2>Iniciar Sesión</h2>
-                            <form action="php/login.php" method="post">
+                            <form action="main.php" method="post">
                                 <div class="form-group">
                                     <input type="email" class="form-control" name="Email" required
                                         pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,50}$">
@@ -122,6 +124,84 @@ require_once('./config/conexion.php');
                 </p>
             </nav>
         </footer>
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000"
+            style="position: absolute; top: 100px; right: 0; margin: 15px; display:none">
+            <div class="toast-header">
+                <strong class="mr-auto">
+                    <?php
+                    if ($loginExitoso) {
+                        echo "Inicio de Sesión Exitoso";
+                    } elseif ($cuentaInexistente) {
+                        echo "Cuenta Inexistente";
+                    } elseif ($contrasenaIncorrecta) {
+                        echo "Contraseña o correo incorrecto";
+                    } else {
+                        echo "Error en el Inicio de Sesión";
+                    }
+                    ?>
+                </strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                <?php
+                if ($loginExitoso) {
+                    echo "Serás redireccionado en 1 segundo.";
+                } elseif ($cuentaInexistente) {
+                    echo "La cuenta no existe. Por favor, regístrate.";
+                } elseif ($contrasenaIncorrecta) {
+                    echo "Verifica tus credenciales.";
+                } else {
+                    echo "Hubo un error en el inicio de sesión.";
+                }
+                ?>
+            </div>
+        </div>
+
+        <script>
+            <?php
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                echo '$(document).ready(function() { $(".toast").toast("show").css("display", "block"); });';
+            }
+            ?>
+        </script>
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000"
+            style="position: absolute; top: 0; right: 0; margin: 15px; display:none">
+            <div class="toast-header">
+                <strong class="mr-auto">
+                    <?php
+                    if (isset($_GET['cuentaEliminada']) && $_GET['cuentaEliminada'] == 'true') {
+                        echo "Cuenta eliminada";
+                    }
+                    ?>
+                </strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                <?php
+                if (isset($_GET['cuentaEliminada']) && $_GET['cuentaEliminada'] == 'true') {
+                    echo "Tu cuenta ha sido eliminada correctamente.";
+                }
+                ?>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                <?php
+                // Solo mostrar el toast si la cuenta ha sido eliminada
+                if (isset($_GET['cuentaEliminada']) && $_GET['cuentaEliminada'] == 'true') {
+                    echo '$(".toast").toast("show").css("display", "block");';
+                }
+                ?>
+            });
+        </script>
+
+
+        </script>
         <script src="./Funcionamiento_por_js/confirmacion_de_contraseña.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/js/bootstrap.min.js"></script>

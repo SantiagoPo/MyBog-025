@@ -2,8 +2,6 @@
 require_once('./config/init_database.php');
 require_once('./config/conexion.php');
 
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -122,7 +120,7 @@ require_once('./config/conexion.php');
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="./Funcionamiento_por_js/editar_usuario.js"></script>
-    <script src="./Funcionamiento_por_js/search_index.js"></script>
+    
     <script>
         // Cuando el documento está completamente cargado
         $(document).ready(function () {

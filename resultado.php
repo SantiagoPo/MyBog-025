@@ -43,10 +43,11 @@ include('modales_footer.php');
         .detalle-establecimiento img {
             max-width: 100%;
             height: auto;
-            margin-bottom: 20px;
+            width: 100%;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
+
 
         .mapa {
             height: 96.1%;

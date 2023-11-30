@@ -1,4 +1,5 @@
 <?php
+
 $correoPermitido = 'mybog@gmail.com';
 
 if (isset($_SESSION['user_id'])) {
@@ -19,7 +20,6 @@ if (isset($_SESSION['user_id'])) {
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#confirmLogoutModal">Cerrar sesión</a>
 HTML;
 
-    // Verificar si el correo del usuario coincide con el correo permitido para mostrar el botón de Dashboard
     if ($_SESSION['email'] === $correoPermitido) {
         echo <<<HTML
             <div class="dropdown-divider"></div>

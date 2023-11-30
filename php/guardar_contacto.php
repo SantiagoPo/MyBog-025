@@ -20,7 +20,7 @@ try {
             echo '<script>
             setTimeout(function(){
             window.location.href = "../index.php"; 
-            }, 2000);  
+            }, 1000);  
             </script>';
         } else {
             throw new Exception();
@@ -39,7 +39,7 @@ try {
     echo '<script>
     setTimeout(function() {
       window.location.href = "../main.php";
-    }, 2000);
+    }, 1000);
   </script>';
 
 }

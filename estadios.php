@@ -21,17 +21,6 @@ require_once('./config/conexion.php');
             overflow: hidden;
             margin-bottom: 20px;
             box-shadow: 15px 5px 18px rgba(0, 0, 0, 0.1);
-            /* Agregado: Sombra para las tarjetas */
-        }
-
-        .card h3 {
-            font-size: 24px;
-        }
-
-        .card .parrafo {
-            max-height: 200px;
-            overflow: hidden;
-            margin-bottom: 10px;
         }
 
         .card h5 {
@@ -40,7 +29,8 @@ require_once('./config/conexion.php');
 
         .card img {
             width: 100%;
-            height: 250px;
+            height: 200px;
+            /* Establecer una altura fija para la imagen */
             object-fit: cover;
         }
 
@@ -48,14 +38,32 @@ require_once('./config/conexion.php');
             padding: 15px;
         }
 
-        #searchInput {
-            margin-bottom: 20px;
+        .card .parrafo {
+            height: 80px;
+            /* Establecer una altura fija para el párrafo */
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .card .card-title {
+            height: 40px;
+            /* Establecer una altura fija para el título */
+            overflow: hidden;
+        }
+
+        .card .card-subtitle {
+            height: 30px;
+            /* Establecer una altura fija para el subtítulo */
+            overflow: hidden;
+        }
+
+        .card .btn {
+            margin-top: 10px;
         }
 
         .card-deck .card {
             margin-bottom: 20px;
             width: 300px;
-            /* Ajustado el ancho de la tarjeta */
         }
 
         .pagination {
@@ -121,7 +129,7 @@ require_once('./config/conexion.php');
             <!-- Contenido principal -->
             <div class="inicio">
                 <!-- Barra de búsqueda -->
-                <input type="text" id="searchInput" placeholder="Buscar tarjetas">
+
 
                 <!-- Sección de tarjetas -->
                 <div id="mundo_aventura">

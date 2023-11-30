@@ -13,7 +13,7 @@ require_once('./config/conexion.php');
     <link rel="stylesheet" type="text/css" href="style/HeaderFooter.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
-    
+
 </head>
 
 <body>
@@ -58,7 +58,6 @@ require_once('./config/conexion.php');
                             </button>
                         </div>
                         <div class="modal-body">
-                            <input type="text" id="searchInput" placeholder="Buscar">
                             <div class="row" id="itemsContainer2">
                                 <div class="col-md-4">
                                     <div class="centro">
@@ -102,7 +101,7 @@ require_once('./config/conexion.php');
                             <div class="row" id="itemsContainer2">
                                 <div class="col-md-4">
                                     <div class="estadio">
-                                    <a id="enlaceestadio" href="./estadio.php?localidad=" class="lugar-link">
+                                        <a id="enlaceestadio" href="./estadio.php?localidad=" class="lugar-link">
                                             <figure>
                                                 <img src="./Imagenes/imagen de lugares/campin.jpeg" />
                                                 <div class="capa">
@@ -114,7 +113,7 @@ require_once('./config/conexion.php');
                                 </div>
                                 <div class="col-md-4">
                                     <div class="Discoteca">
-                                    <a id="enlaceDiscoteca" href="./Discotecas.php?localidad=" class="lugar-link">
+                                        <a id="enlaceDiscoteca" href="./Discotecas.php?localidad=" class="lugar-link">
                                             <figure>
                                                 <img src="./Imagenes/modal/Discoteca.jpeg" />
                                                 <div class="capa">
@@ -470,7 +469,8 @@ require_once('./config/conexion.php');
                                     <div class="capa">
                                         <h3>Usme</h3>
                                         <p>
-                                        Usme conserva algunas tradiciones culturales propias, y en eventos especiales, es posible que se realicen celebraciones y festividades locales.
+                                            Usme conserva algunas tradiciones culturales propias, y en eventos
+                                            especiales, es posible que se realicen celebraciones y festividades locales.
                                         </p>
                                     </div>
                                 </figure>
@@ -552,6 +552,7 @@ require_once('./config/conexion.php');
         });
     </script>
 
+
     <script>
         $(document).ready(function () {
             // Función para actualizar la información de los centros comerciales según la localidad seleccionada
@@ -575,7 +576,7 @@ require_once('./config/conexion.php');
         });
     </script>
 
-<script>
+    <script>
         $(document).ready(function () {
             // Función para actualizar la información de los centros comerciales según la localidad seleccionada
             function actualizarInformacionHospedajes(localidad) {
@@ -598,7 +599,7 @@ require_once('./config/conexion.php');
         });
     </script>
 
-<script>
+    <script>
         $(document).ready(function () {
             // Función para actualizar la información de los centros comerciales según la localidad seleccionada
             function actualizarInformacionDiscotecas(localidad) {
@@ -620,8 +621,30 @@ require_once('./config/conexion.php');
             // Puedes agregar más eventos para otras interacciones si es necesario
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            // Función para actualizar la información del parque según la localidad seleccionada
+            function actualizarInformacionEstadios(localidad) {
+                // Actualizar el atributo href del enlace "parque" con la localidad seleccionada
+                $("#enlaceestadio").attr("href", "./estadios.php?localidad=" + localidad);
 
-<script>
+                // Aquí deberías realizar una llamada AJAX para obtener la información del parque según la localidad seleccionada
+                // En este ejemplo, simplemente se muestra un mensaje de demostración
+                var mensajeDemo = "Estadios para " + localidad;
+                $(".estadio h3").text(mensajeDemo);
+            }
+
+            // Manejar el evento de clic en los botones de localidades
+            $(".localidad-btn").click(function () {
+                var localidadSeleccionada = $(this).data("localidad");
+                actualizarInformacionEstadios(localidadSeleccionada);
+            });
+
+            // Puedes agregar más eventos para otras interacciones si es necesario
+        });
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Obtener el campo de búsqueda y las localidades
             const searchInput = document.getElementById('searchInput2');
@@ -648,44 +671,44 @@ require_once('./config/conexion.php');
         });
     </script>
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtener el campo de búsqueda y las localidades
-        const searchInput = document.getElementById('searchInput');
-        const itemsContainer = document.getElementById('itemsContainer2');
-        const items = itemsContainer.querySelectorAll('.col-md-4');
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtener el campo de búsqueda y las localidades
+            const searchInput = document.getElementById('searchInput');
+            const itemsContainer = document.getElementById('itemsContainer2');
+            const items = itemsContainer.querySelectorAll('.col-md-4');
 
-        // Manejar el evento de entrada en el campo de búsqueda
-        searchInput.addEventListener('input', function () {
-            const searchTerm = searchInput.value.trim().toLowerCase();
+            // Manejar el evento de entrada en el campo de búsqueda
+            searchInput.addEventListener('input', function () {
+                const searchTerm = searchInput.value.trim().toLowerCase();
 
-            // Iterar sobre los elementos y mostrar/ocultar según la búsqueda
-            items.forEach(function (item) {
-                const itemName = item.querySelector('h3').textContent.toLowerCase();
-                const match = itemName.includes(searchTerm);
+                // Iterar sobre los elementos y mostrar/ocultar según la búsqueda
+                items.forEach(function (item) {
+                    const itemName = item.querySelector('h3').textContent.toLowerCase();
+                    const match = itemName.includes(searchTerm);
 
-                // Mostrar u ocultar el elemento según la coincidencia
-                if (match) {
-                    item.style.display = 'block'; // Mostrar el elemento
-                } else {
-                    item.style.display = 'none'; // Ocultar el elemento
-                }
+                    // Mostrar u ocultar el elemento según la coincidencia
+                    if (match) {
+                        item.style.display = 'block'; // Mostrar el elemento
+                    } else {
+                        item.style.display = 'none'; // Ocultar el elemento
+                    }
+                });
             });
         });
-    });
-</script>
-<style>
-#searchInput2{
-    border-radius: 30px;
-    width: 250px;
-    height: 40px;
-    margin-left: 115px;
-    margin-bottom: 20px;
+    </script>
+    <style>
+        #searchInput2 {
+            border-radius: 30px;
+            width: 250px;
+            height: 40px;
+            margin-left: 115px;
+            margin-bottom: 20px;
 
-}
-.titulo1 {
-    text-align: center;
-    margin-bottom: 50px;
-    color: red;
-}
+        }
 
-</style>
+        .titulo1 {
+            text-align: center;
+            margin-bottom: 50px;
+            color: red;
+        }
+    </style>

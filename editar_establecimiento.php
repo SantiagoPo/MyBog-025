@@ -89,12 +89,23 @@ if (isset($_GET['id'])) {
 // Procesa el formulario de edición si se envió.
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_establecimiento'])) {
     $nombreEstablecimiento = $_POST['nombre_establecimiento'];
-    $direccion = $_POST['direccion'];
     $telefono = $_POST['telefono'];
     $informacionAdicional = $_POST['informacion_adicional'];
     $nit = $_POST['nit'];
     $localidad = $_POST['localidad'];
     $tipoEstablecimiento = $_POST['tipo_establecimiento'];
+    $tipoVia = $_POST['tipo_via'];
+    $numeroVia = $_POST['numero'];
+    $letra1 = $_POST['letra_1'];
+    $bis = $_POST['bis'];
+    $letra3 = $_POST['letra_3'];
+    $direccionSurNorte = $_POST['direccion_sur_norte'];
+    $numero2 = $_POST['numero_2'];
+    $numero3 = $_POST['numero_3'];
+    $direccionEsteOeste = $_POST['direccion_este_oeste'];
+    $infoAdicionalDireccion = $_POST['info_adicional'];
+
+    $direccionCompleta = $tipoVia . '¬' . $numeroVia . '¬' . $letra1 . '¬' . $bis . '¬' . $direccionSurNorte . '¬#¬' . $numero2 . '¬' . $letra3 . '¬-¬' . $numero3 . '¬' . $direccionEsteOeste . '¬' . $infoAdicionalDireccion;
 
     $sqlImagenes = "SELECT * FROM imagenes_establecimiento WHERE id_establecimiento = ?";
     $stmtImagenes = $conexion->prepare($sqlImagenes);

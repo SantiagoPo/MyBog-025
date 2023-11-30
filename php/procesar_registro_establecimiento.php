@@ -82,7 +82,7 @@ try {
     echo '<div class="alert alert-danger" role="alert">';
     echo 'Ha ocurrido un error al procesar la solicitud. Detalles del error: ' . $e->getMessage();
     echo '</div>';
-    header("refresh:3;url=../main.php");  // Redirige a main.php después de 3 segundos
+    header("refresh:1;url=../main.php");  // Redirige a main.php después de 3 segundos
     exit;
 }
 ?>
