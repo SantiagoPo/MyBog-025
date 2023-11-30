@@ -27,7 +27,7 @@ tr {
 }
 
 .btn-primary {
-  color: black;
+  color: rgb(255, 255, 255);
   background-color: #ffc107;
   border-color: transparent;
 }
@@ -55,7 +55,7 @@ tr {
 }
 
 .border:hover {
-  color: black;
+  color: rgb(255, 250, 250);
   background-color: #ffc107;
   border: 1px solid #ffc107 !important;
 }
@@ -79,7 +79,7 @@ tr {
 .btn-primary.active,
 .btn-primary:active,
 .show>.btn-primary.dropdown-toggle {
-  color: black;
+  color: rgb(255, 255, 255);
   background-color: #f2163e;
   border-color: #f2163e;
 }
@@ -114,7 +114,7 @@ a {
 
 .btn-check:focus+.btn-primary,
 .btn-primary:focus {
-  color: black;
+  color: rgb(255, 255, 255);
   background-color: #f2163e;
   border-color: #f2163e;
 }

@@ -9,10 +9,7 @@ if(!isset($_GET['id'])){
 
 $delete = $conexion->query("DELETE FROM `schedule_list` where id = '{$_GET['id']}'");
 if($delete){
-    echo '<div class="alert alert-success" role="alert">
-        Eliminacion de evento. Serás redireccionado en 2 segundos.
-        </div>';
-        echo '<script> setTimeout(function(){ window.location.href = "./calendario.php"; }, 2000); </script>';
+        echo '<script> setTimeout(function(){ window.location.href = "./calendario.php"; }, 0); </script>';
 }else{
     echo "<pre>";
     echo "An Error occured.<br>";

@@ -267,10 +267,10 @@ function rechazarEstablecimiento($idEstablecimiento)
                                             echo "<tr>";
                                             echo "<td>{$rowEstablecimiento['Id_registro']}</td>";
                                             echo "<td>{$rowEstablecimiento['Nombre_del_establecimiento']}</td>";
-                                            echo "<td>" . str_replace(['~', '¬'], ' ', $rowEstablecimiento['Direccion_de_establecimiento']) . "</td>";
+                                            echo "<td>" . str_replace(['~', '¬', 'Bogotá,'], ' ', $rowEstablecimiento['Direccion_de_establecimiento']) . "</td>";
                                             echo "<td>{$rowEstablecimiento['Telefono']}</td>";
                                             echo "<td>{$rowEstablecimiento['Nit']}</td>";
-                                            echo "<td>{$rowEstablecimiento['localidad']}</td>";
+                                            echo "<td>" . str_replace(['_'], ' ', $row['localidad']) . "</td>";
                                             echo "<td>
                                                     <div class='d-flex align-items-center'>
                                                         <a class='btn btn-success mr-2' href='admin.php?aprobarEstablecimiento={$rowEstablecimiento['Id_registro']}'>
@@ -342,10 +342,11 @@ function rechazarEstablecimiento($idEstablecimiento)
                                         echo "<tr>";
                                         echo "<td>{$rowEstablecimiento['Id_registro']}</td>";
                                         echo "<td>{$rowEstablecimiento['Nombre_del_establecimiento']}</td>";
-                                        echo "<td>" . str_replace(['~', '¬'], ' ', $rowEstablecimiento['Direccion_de_establecimiento']) . "</td>";
+                                        echo "<td>" . str_replace(['~', '¬', 'Bogotá,'], ' ', $rowEstablecimiento['Direccion_de_establecimiento']) . "</td>";
                                         echo "<td>{$rowEstablecimiento['Telefono']}</td>";
                                         echo "<td>{$rowEstablecimiento['Nit']}</td>";
-                                        echo "<td>{$rowEstablecimiento['localidad']}</td>";
+                                        echo "<td>" . str_replace(['~', '¬', 'Bogotá,'], ' ', $rowEstablecimiento['localidad']) . "</td>";
+
                                         echo "<td>";
 
                                         // Verificar si hay imágenes asociadas al establecimiento

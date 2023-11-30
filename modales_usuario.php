@@ -58,24 +58,31 @@ HTML;
                 <form id="editForm" method="post" action="php/actualizar.php">
                     <div class="form-group">
                         <label for="editNombre">Nombre:</label>
-                        <input type="text" name="nuevoNombre" id="editNombre" class="form-control"
-                            value="<?php echo isset($_SESSION['nombres']) ? $_SESSION['nombres'] : ''; ?>" required>
+                        <input type="text" name="nuevoNombre" id="editNombre" class="form-control" autofocus required
+                            maxlength="20" pattern="[a-zA-Z\s]+"
+                            title="Solo se permiten letras y espacios. Máximo 20 caracteres."
+                            value="<?php echo isset($_SESSION['nombres']) ? $_SESSION['nombres'] : ''; ?>">
                     </div>
                     <div class="form-group">
                         <label for="editApellido">Apellido:</label>
-                        <input type="text" name="nuevoApellido" id="editApellido" class="form-control"
-                            value="<?php echo isset($_SESSION['apellidos']) ? $_SESSION['apellidos'] : ''; ?>" required>
+                        <input type="text" name="nuevoApellido" id="editApellido" class="form-control" required
+                            maxlength="20" pattern="[a-zA-Z\s]+"
+                            title="Solo se permiten letras y espacios. Máximo 20 caracteres."
+                            value="<?php echo isset($_SESSION['apellidos']) ? $_SESSION['apellidos'] : ''; ?>">
                     </div>
                     <div class="form-group">
                         <label for="editCorreo">Correo:</label>
-                        <input type="email" name="nuevoCorreo" id="editCorreo" class="form-control"
-                            value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>" required>
+                        <input type="email" name="nuevoCorreo" id="editCorreo" class="form-control" required
+                            maxlength="50" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                            title="Ingresa un correo electrónico válido. Máximo 50 caracteres."
+                            value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>">
                     </div>
                     <div class="form-group">
                         <div class="form-group">
                             <label for="editcontraseña"> Contraseña:</label>
                             <input type="password" name="nuevaContraseña" id="nuevaContraseña" class="form-control"
-                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}" required>
+                                required minlength="8" maxlength="15" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}"
+                                title="Debe contener al menos una mayúscula, una minúscula y un número. Mínimo 8 y máximo 15 caracteres.">
                         </div>
 
                     </div>

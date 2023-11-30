@@ -50,7 +50,7 @@ require_once('./config/conexion.php');
             </nav>
             <div class="modal fade" id="movedModal" tabindex="-1" aria-labelledby="movedModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
+                    <div class="modal-content ">
                         <div class="modal-header">
                             <h5 class="modal-title" id="movedModalLabel">Selecciona</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -123,12 +123,25 @@ require_once('./config/conexion.php');
                                         </a>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="Establecimiento">
+                                        <a id="enlaceEstablecimiento" href="./establecimientos_registrados.php?localidad=" class="lugar-link">
+                                            <figure>
+                                                <img src="./Imagenes/usuario.png" />
+                                                <div class="capa">
+                                                    <h3>Establecimientos Registrados</h3>
+                                                </div>
+                                            </figure>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <br>
@@ -136,7 +149,8 @@ require_once('./config/conexion.php');
                 <div class="titulo1">
                     <h1>Localidades de Bogotá</h1>
                 </div>
-                <input type="text" id="searchInput2" placeholder="Buscar por localidad">
+                <input type="text" id="searchInput2" placeholder="Busca la localidad"
+                    class="mx-auto my-auto d-block mb-4 ">
                 <div class="row" id="localidadesContainer">
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="Antonio_Narino">
@@ -644,65 +658,65 @@ require_once('./config/conexion.php');
         });
     </script>
 
+<script>
+        $(document).ready(function () {
+            // Función para actualizar la información del parque según la localidad seleccionada
+            function actualizarInformacionEstablecimientos(localidad) {
+                // Actualizar el atributo href del enlace "parque" con la localidad seleccionada
+                $("#enlaceEstablecimiento").attr("href", "./establecimientos_registrados.php?localidad=" + localidad);
+
+                // Aquí deberías realizar una llamada AJAX para obtener la información del parque según la localidad seleccionada
+                // En este ejemplo, simplemente se muestra un mensaje de demostración
+                var mensajeDemo = "Establecimientos Registrados para " + localidad;
+                $(".Establecimientos h3").text(mensajeDemo);
+            }
+
+            // Manejar el evento de clic en los botones de localidades
+            $(".localidad-btn").click(function () {
+                var localidadSeleccionada = $(this).data("localidad");
+                actualizarInformacionEstablecimientos(localidadSeleccionada);
+            });
+
+            // Puedes agregar más eventos para otras interacciones si es necesario
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Obtener el campo de búsqueda y las localidades
             const searchInput = document.getElementById('searchInput2');
             const localidadesContainer = document.getElementById('localidadesContainer');
             const localidades = localidadesContainer.querySelectorAll('.col-md-4');
 
-            // Manejar el evento de entrada en el campo de búsqueda
             searchInput.addEventListener('input', function () {
                 const searchTerm = searchInput.value.trim().toLowerCase();
 
-                // Iterar sobre las localidades y mostrar/ocultar según la búsqueda
                 localidades.forEach(function (localidad) {
                     const nombreLocalidad = localidad.querySelector('h3').textContent.toLowerCase();
                     const match = nombreLocalidad.includes(searchTerm);
 
-                    // Mostrar u ocultar la localidad según la coincidencia
+                    // Show/hide the localidad div based on the match
+                    const localidadDiv = localidad.querySelector('.localidad-btn');
                     if (match) {
-                        localidad.style.display = 'block'; // Mostrar la localidad
+                        localidadDiv.style.display = 'block'; // Show the localidad
+                        // Move the matched card to the top
+                        localidadesContainer.prepend(localidad);
                     } else {
-                        localidad.style.display = 'none'; // Ocultar la localidad
+                        localidadDiv.style.display = 'none'; // Hide the localidad
                     }
                 });
             });
         });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Obtener el campo de búsqueda y las localidades
-            const searchInput = document.getElementById('searchInput');
-            const itemsContainer = document.getElementById('itemsContainer2');
-            const items = itemsContainer.querySelectorAll('.col-md-4');
 
-            // Manejar el evento de entrada en el campo de búsqueda
-            searchInput.addEventListener('input', function () {
-                const searchTerm = searchInput.value.trim().toLowerCase();
 
-                // Iterar sobre los elementos y mostrar/ocultar según la búsqueda
-                items.forEach(function (item) {
-                    const itemName = item.querySelector('h3').textContent.toLowerCase();
-                    const match = itemName.includes(searchTerm);
-
-                    // Mostrar u ocultar el elemento según la coincidencia
-                    if (match) {
-                        item.style.display = 'block'; // Mostrar el elemento
-                    } else {
-                        item.style.display = 'none'; // Ocultar el elemento
-                    }
-                });
-            });
-        });
     </script>
     <style>
+       
+
+
         #searchInput2 {
-            border-radius: 30px;
+            border-radius: 15px;
             width: 250px;
             height: 40px;
-            margin-left: 115px;
-            margin-bottom: 20px;
+
 
         }
 
@@ -710,5 +724,13 @@ require_once('./config/conexion.php');
             text-align: center;
             margin-bottom: 50px;
             color: red;
+
         }
+
+        .modal-content{
+            width: 110%;
+            
+        }
+        
+       
     </style>

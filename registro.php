@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <form action="registro.php" method="post" onsubmit="return validarFormulario()">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="Nombres" name="Nombres" autofocus required
-                                    maxlength="20" pattern="[a-zA-Z\s]+"
+                                  d  maxlength="20" pattern="[a-zA-Z\s]+"
                                     title="Solo se permiten letras y espacios. Máximo 20 caracteres.">
                                 <label>Nombre</label>
                             </div>

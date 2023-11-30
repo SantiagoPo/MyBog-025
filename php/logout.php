@@ -1,10 +1,8 @@
 <?php
 session_start();
 
-// Destruir todas las variables de sesión
 session_destroy();
 
-// Redireccionar al usuario a main.html después de cerrar sesión
-header("Location: ../main.php");
+echo '<script> setTimeout(function(){ window.location.href = "../main.php?cuentaCerrada=true"; }, 0); </script>';
 exit;
 ?>

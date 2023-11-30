@@ -38,7 +38,6 @@ try {
             $_SESSION['email'] = $emailDelUsuario;
 
             $loginExitoso = true;
-
             echo '<script> setTimeout(function(){ window.location.href = "index.php"; }, 1000); </script>';
         } else {
             // Contraseña incorrecta

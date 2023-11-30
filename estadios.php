@@ -152,33 +152,33 @@ require_once('./config/conexion.php');
 
                                 // Tu bucle de tarjetas de estadios
                                 foreach ($estadios as $estadio):
-                            ?>
-                            <!-- Tarjeta de estadio -->
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <!-- Contenido de la tarjeta -->
-
-                                    <!-- Enlace para abrir informacion.php con el nombre de la localidad en la URL -->
-                                    <?php
-                                        $imagenNombre = rawurlencode($estadio['Nombres_de_estadios']);
-                                        $imagenUrl = "./Imagenes/estadios/{$imagenNombre}.jpg"; // Ajusta la extensión según el formato de tus imágenes
                                     ?>
-                                    <img class="card-img-top" src="<?php echo $imagenUrl; ?>"
-                                        alt="<?php echo htmlspecialchars($estadio['Nombres_de_estadios']); ?>">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <?php echo htmlspecialchars($estadio['Nombres_de_estadios']); ?>
-                                        </h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">
-                                            <?php echo htmlspecialchars($estadio['Ubicacion_de_estadios']); ?>
-                                        </h6>
-                                        <!-- Puedes agregar más detalles según tu estructura de base de datos -->
-                                        <a href="resultado.php?tabla=estadios&nombre=<?php echo urlencode($estadio['Nombres_de_estadios']); ?>"
+                                    <!-- Tarjeta de estadio -->
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <!-- Contenido de la tarjeta -->
+
+                                            <!-- Enlace para abrir informacion.php con el nombre de la localidad en la URL -->
+                                            <?php
+                                            $imagenNombre = rawurlencode($estadio['Nombres_de_estadios']);
+                                            $imagenUrl = "./Imagenes/estadios/{$imagenNombre}.jpg"; // Ajusta la extensión según el formato de tus imágenes
+                                            ?>
+                                            <img class="card-img-top" src="<?php echo $imagenUrl; ?>"
+                                                alt="<?php echo htmlspecialchars($estadio['Nombres_de_estadios']); ?>">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <?php echo htmlspecialchars($estadio['Nombres_de_estadios']); ?>
+                                                </h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">
+                                                    <?php echo htmlspecialchars($estadio['Ubicacion_de_estadios']); ?>
+                                                </h6>
+                                                <!-- Puedes agregar más detalles según tu estructura de base de datos -->
+                                                <a href="resultado.php?tabla=estadios&nombre=<?php echo urlencode($estadio['Nombres_de_estadios']); ?>"
                                                     class="btn btn-primary">Más información</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <?php
+                                    <?php
                                 endforeach;
                             } else {
                                 echo '<p>No se encontraron estadios para la localidad seleccionada.</p>';
@@ -187,114 +187,112 @@ require_once('./config/conexion.php');
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pie de página -->
+    <footer class="footer">
+        <nav>
+            <ul>
+                <li><a href="#" data-toggle="modal" data-target="#modalPoliticaPrivacidad">Política de privacidad</a>
+                </li>
+                <li><a href="#" data-toggle="modal" data-target="#modalTerminosCondiciones">Términos y condiciones</a>
+                </li>
+                <li><a href="#" data-toggle="modal" data-target="#modalContacto">Contacto</a></li>
+                <?php
+                if (isset($_SESSION['user_id'])) {
+                    echo '';
+                } else {
+                    echo '<li><a data-toggle="modal" data-target="#myModal" href="#">¿Deseas registrar tu establecimiento?</a></li>';
+                }
+                ?>
+            </ul>
 
-                <!-- Pie de página -->
-                <footer class="footer">
-                    <nav>
-                        <ul>
-                            <li><a href="#" data-toggle="modal"
-                                    data-target="#modalPoliticaPrivacidad">Política de privacidad</a>
-                            </li>
-                            <li><a href="#" data-toggle="modal"
-                                    data-target="#modalTerminosCondiciones">Términos y condiciones</a>
-                            </li>
-                            <li><a href="#" data-toggle="modal"
-                                    data-target="#modalContacto">Contacto</a></li>
-                            <?php
-                            if (isset($_SESSION['user_id'])) {
-                                echo '';
-                            } else {
-                                echo '<li><a data-toggle="modal" data-target="#myModal" href="#">¿Deseas registrar tu establecimiento?</a></li>';
-                            }
-                            ?>
-                        </ul>
-
-                        <!-- Modal de mensaje -->
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class modal-header="">
-                                        <h4 class="modal-title" id="myModalLabel">Mensaje</h4>
-                                        <button type="button" class="close" data-dismiss="modal"
-                                            aria-hidden="true">&times;</button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Debes estar logueado/registrado para utilizar este servicio.
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- Modal de mensaje -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class modal-header="">
+                            <h4 class="modal-title" id="myModalLabel">Mensaje</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
-                        <br>
-                        <p>©
-                            <?php echo date("Y"); ?> MyBog. Todos los derechos reservados.
-                        </p>
-                    </nav>
-                </footer>
+                        <div class="modal-body">
+                            Debes estar logueado/registrado para utilizar este servicio.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <p>©
+                <?php echo date("Y"); ?> MyBog. Todos los derechos reservados.
+            </p>
+        </nav>
+    </footer>
 
-                <!-- Scripts -->
-                <script src="./Funcionamiento_por_js/confirmacion_de_contraseña.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/js/bootstrap.min.js"></script>
-                <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-                <script src="./Funcionamiento_por_js/editar_usuario.js"></script>
-                <script>
-                    // Obtén todas las tarjetas
-                    const cards = document.querySelectorAll('.card');
+    <!-- Scripts -->
+    <script src="./Funcionamiento_por_js/confirmacion_de_contraseña.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="./Funcionamiento_por_js/editar_usuario.js"></script>
+    <script>
+        // Obtén todas las tarjetas
+        const cards = document.querySelectorAll('.card');
 
-                    // Inicializa la página actual
-                    let currentPage = 1;
+        // Inicializa la página actual
+        let currentPage = 1;
 
-                    // Función para mostrar u ocultar las tarjetas según la página
-                    function showCards() {
-                        cards.forEach((card, index) => {
-                            if (index >= (currentPage - 1) * <?php echo $cardsPerPage; ?> && index <
-                                currentPage * <?php echo $cardsPerPage; ?>) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        });
-                    }
+        // Función para mostrar u ocultar las tarjetas según la página
+        function showCards() {
+            cards.forEach((card, index) => {
+                if (index >= (currentPage - 1) * <?php echo $cardsPerPage; ?> && index <
+                    currentPage * <?php echo $cardsPerPage; ?>) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
 
-                    // Función para actualizar la indicación de la página actual
-                    function updatePageIndicator() {
-                        const pageIndicator = document.getElementById('pageIndicator');
-                        pageIndicator.textContent = `Página ${currentPage}`;
-                    }
+        // Función para actualizar la indicación de la página actual
+        function updatePageIndicator() {
+            const pageIndicator = document.getElementById('pageIndicator');
+            pageIndicator.textContent = `Página ${currentPage}`;
+        }
 
-                    // Función para ir a la página anterior
-                    function goToPreviousPage() {
-                        if (currentPage > 1) {
-                            currentPage--;
-                            showCards();
-                            updatePageIndicator();
-                        }
-                    }
+        // Función para ir a la página anterior
+        function goToPreviousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showCards();
+                updatePageIndicator();
+            }
+        }
 
-                    // Función para ir a la página siguiente
-                    function goToNextPage() {
-                        const totalPages = Math.ceil(<?php echo $count; ?> / <?php echo $cardsPerPage; ?>);
-                        if (currentPage < totalPages) {
-                            currentPage++;
-                            showCards();
-                            updatePageIndicator();
-                        }
-                    }
+        // Función para ir a la página siguiente
+        function goToNextPage() {
+            const totalPages = Math.ceil(<?php echo $count; ?> / <?php echo $cardsPerPage; ?>);
+            if (currentPage < totalPages) {
+                currentPage++;
+                showCards();
+                updatePageIndicator();
+            }
+        }
 
-                    // Agrega event listeners a los botones de paginación
-                    const prevButton = document.getElementById('prevButton');
-                    const nextButton = document.getElementById('nextButton');
+        // Agrega event listeners a los botones de paginación
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
 
-                    prevButton.addEventListener('click', goToPreviousPage);
-                    nextButton.addEventListener('click', goToNextPage);
+        prevButton.addEventListener('click', goToPreviousPage);
+        nextButton.addEventListener('click', goToNextPage);
 
-                    // Mostrar la página inicial
-                    showCards();
-                    updatePageIndicator();
-                </script>
+        // Mostrar la página inicial
+        showCards();
+        updatePageIndicator();
+    </script>
 </body>
 
 </html>

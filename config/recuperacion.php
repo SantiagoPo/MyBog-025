@@ -3,6 +3,7 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 include_once('conexion.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->Username = 'MyBog2023@outlook.com';
                 $mail->Password = 'Prueba159';
                 $mail->Port = 587;
-                $mail->CharSet = 'UTF-8'; 
+                $mail->CharSet = 'UTF-8';
                 $mail->Encoding = 'base64';
                 $mail->setFrom('MyBog2023@outlook.com', 'MyBog');
-                $mail->addAddress($email); 
+                $mail->addAddress($email);
                 $verification_code = sprintf("%06d", mt_rand(1, 999999));
                 $stmt->bind_result($user_id);
                 $stmt->fetch();
@@ -52,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo '<div class="alert alert-danger" role="alert">
                 El correo electrónico no está registrado.
             </div>';
+            echo '<script> setTimeout(function(){ window.location.href = "../contraseñaf.php"; }, 3000); </script>';
         }
     } elseif (isset($_POST['password'])) {
         // Proceso de cambio de contraseña
@@ -65,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Hash de la nueva contraseña
             $new_password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-            // Actualizar la contraseña en la base de datos
             $update_sql = "UPDATE cuentas SET Password = ? WHERE Id_Usuario = ?";
             $stmt = $conexion->prepare($update_sql);
             $stmt->bind_param("si", $new_password_hash, $user_id);
@@ -75,21 +76,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt_delete = $conexion->prepare($delete_code_sql);
                 $stmt_delete->bind_param("i", $user_id);
                 $stmt_delete->execute();
-                
+
                 echo '<div class="alert alert-success" role="alert">
                 Contraseña cambiada exitosamente
                 </div>';
-                echo '<script> setTimeout(function(){ window.location.href = "main.php"; }, 3000); </script>';
+                echo '<script> setTimeout(function(){ window.location.href = "../main.php"; }, 3000); </script>';
                 exit();
             } else {
                 echo '<div class="alert alert-danger" role="alert">
                 Error al actualizar la contraseña. Inténtalo de nuevo.
                 </div>';
+                echo '<script> setTimeout(function(){ window.location.href = "../change_password.php"; }, 3000); </script>';
             }
         } else {
             echo '<div class="alert alert-danger" role="alert">
-                Las contraseñas no coinciden. Inténtalo de nuevo.
-                </div>';
+            Las contraseñas no coinciden. Inténtalo de nuevo.
+    </div>';
+            echo '<script> setTimeout(function(){ window.location.href = "../change_password.php?user_id=' . $user_id . '"; }, 3000); </script>';
         }
     } else {
         // Redirigir a la página principal si se accede directamente a este archivo sin datos

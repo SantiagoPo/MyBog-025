@@ -38,6 +38,9 @@ body {
         font-size: 14px;
         padding: 8px;
     }
+    .modal-body{
+        padding: 0%;
+    }
 }
 
 

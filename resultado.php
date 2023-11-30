@@ -43,11 +43,10 @@ include('modales_footer.php');
         .detalle-establecimiento img {
             max-width: 100%;
             height: auto;
-            width: 100%;
+            margin-bottom: 20px;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
-
 
         .mapa {
             height: 96.1%;
@@ -121,9 +120,10 @@ include('modales_footer.php');
                         if (isset($_GET['tabla']) && isset($_GET['nombre'])) {
                             $tabla = $_GET['tabla'];
                             $nombre = $_GET['nombre'];
+                           
 
                             // Asegúrate de que solo se permitan ciertas tablas (evita posibles ataques)
-                            $tablasPermitidas = array('parques', 'discotecas', 'centros_comerciales', 'estadios', 'hospedaje');
+                            $tablasPermitidas = array('parques', 'discotecas', 'centros_comerciales', 'estadios', 'hospedaje', 'registro_de_establecimiento');
                             if (in_array($tabla, $tablasPermitidas)) {
                                 // Determina el nombre de la columna basándote en la tabla
                                 switch ($tabla) {
@@ -207,83 +207,85 @@ include('modales_footer.php');
                 </div>
             </div>
         </div>
-        <?php
-        include('modales_footer.php');
-        ?>
-        <br><br>
-        <footer class="footer">
-            <nav>
-                <ul>
-                    <li><a href="#" data-toggle="modal" data-target="#modalPoliticaPrivacidad">Política de
-                            privacidad</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#modalTerminosCondiciones">Términos y
-                            condiciones</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#modalContacto">Contacto</a></li>
-                    <?php
-                    if (isset($_SESSION['user_id'])) {
-                        echo '';
-                    } else {
-                        echo '<li><a data-toggle="modal" data-target="#myModal" href="#">¿Deseas registrar tu establecimiento?</a></li>';
-                    }
-                    ?>
+    </div>
+    <?php
+    include('modales_footer.php');
+    ?>
+    <br><br>
+    <footer class="footer">
+        <nav>
+            <ul>
+                <li><a href="#" data-toggle="modal" data-target="#modalPoliticaPrivacidad">Política de
+                        privacidad</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#modalTerminosCondiciones">Términos y
+                        condiciones</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#modalContacto">Contacto</a></li>
+                <?php
+                if (isset($_SESSION['user_id'])) {
+                    echo '';
+                } else {
+                    echo '<li><a data-toggle="modal" data-target="#myModal" href="#">¿Deseas registrar tu establecimiento?</a></li>';
+                }
+                ?>
 
-                </ul>
+            </ul>
 
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="myModalLabel">Mensaje</h4>
-                                <button type="button" class="close" data-dismiss="modal"
-                                    aria-hidden="true">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                Debes estar logeado/Registrado para utilizar este servicio.
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Mensaje</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            Debes estar logeado/Registrado para utilizar este servicio.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
-                <br>
-                <p>©
-                    <?php echo date("Y"); ?> MyBog. Todos los derechos reservados.
-                </p>
-            </nav>
-        </footer>
+            </div>
+            <br>
+            <p>©
+                <?php echo date("Y"); ?> MyBog. Todos los derechos reservados.
+            </p>
+        </nav>
+    </footer>
 
-        <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
-        <script>
-            mapboxgl.accessToken = 'pk.eyJ1Ijoic2FudGZseSIsImEiOiJjbGkwamdrYjcwMmdlM2NvOXgyN2s0aW1xIn0.c1WhoBvGP7nCERKiX-mxbQ';
-            var ubicacion = "<?php echo $informacion[$columnaUbicacion]; ?>"; // Ajusta según la estructura de tu base de datos
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2FudGZseSIsImEiOiJjbGkwamdrYjcwMmdlM2NvOXgyN2s0aW1xIn0.c1WhoBvGP7nCERKiX-mxbQ';
+        var ubicacion = "<?php echo $informacion[$columnaUbicacion]; ?>"; // Ajusta según la estructura de tu base de datos
 
-            // Geocodificación con Mapbox
-            var geocoding_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + encodeURIComponent(ubicacion) + ".json?access_token=" + mapboxgl.accessToken;
+        // Geocodificación con Mapbox
+        var geocoding_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + encodeURIComponent(ubicacion) + ".json?access_token=" + mapboxgl.accessToken;
 
-            // Realizar la solicitud HTTP
-            fetch(geocoding_url)
-                .then(response => response.json())
-                .then(data => {
-                    var coordinates = data.features[0].center;
-                    var latitud = coordinates[1];
-                    var longitud = coordinates[0];
+        // Realizar la solicitud HTTP
+        fetch(geocoding_url)
+            .then(response => response.json())
+            .then(data => {
+                var coordinates = data.features[0].center;
+                var latitud = coordinates[1];
+                var longitud = coordinates[0];
 
-                    var map = new mapboxgl.Map({
-                        container: 'mapbox-map',
-                        style: 'mapbox://styles/mapbox/streets-v11',
-                        center: [longitud, latitud],
-                        zoom: 15
-                    });
-
-                    // Añade un marcador en la ubicación del establecimiento
-                    new mapboxgl.Marker().setLngLat([longitud, latitud]).addTo(map);
-                })
-                .catch(error => {
-                    console.error('Error en la geocodificación:', error);
+                var map = new mapboxgl.Map({
+                    container: 'mapbox-map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [longitud, latitud],
+                    zoom: 15
                 });
-        </script>
+
+                // Añade un marcador en la ubicación del establecimiento
+                new mapboxgl.Marker().setLngLat([longitud, latitud]).addTo(map);
+            })
+            .catch(error => {
+                console.error('Error en la geocodificación:', error);
+            });
+    </script>
 </body>
 
 </html>

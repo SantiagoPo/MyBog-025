@@ -2,6 +2,8 @@
 <?php
 require_once('./config/conexion.php');
 
+$eventoguardado = false;
+
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     echo "<script> alert('Error: No hay datos para guardar.'); location.replace('./') </script>";
     $conexion->close();
@@ -26,10 +28,7 @@ if (empty($id)) {
 $save = $conexion->query($sql);
 
 if ($save) {
-    echo '<div class="alert alert-success" role="alert">
-        Registro de evento exitoso. Serás redireccionado en 2 segundos.
-        </div>';
-        echo '<script> setTimeout(function(){ window.location.href = "./calendario.php"; }, 2000); </script>';
+    $eventoguardado = true;
 } else {
     echo "<pre>";
     echo "An Error occurred.<br>";
@@ -38,5 +37,4 @@ if ($save) {
     echo "</pre>";
 }
 
-
-?>
+    ?>

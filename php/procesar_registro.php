@@ -34,7 +34,7 @@ try {
         throw new Exception("Error al insertar el registro en la base de datos: " . mysqli_error($conexion));
     }
 } catch (Exception $e) {
-    // Manejo de excepciones
+    header("refresh:1;url=../config/pagina_error.php");
 } finally {
     // Cerrar la conexión solo si está abierta
     if ($conexion) {

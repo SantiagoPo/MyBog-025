@@ -6,9 +6,10 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$establecimientomodificado = false;
+
 if (isset($_GET['id'])) {
     $establecimientoId = $_GET['id'];
-
 
     // Consulta para obtener los detalles del establecimiento a editar
     $sql = "SELECT * FROM registro_de_establecimiento WHERE Id_registro = ?";
@@ -38,7 +39,7 @@ if (isset($_GET['id'])) {
         $parts = explode('¬', $direccionCompleta);
 
         // Inicializar variables para cada parte de la dirección.
-        $tipoVia = $numeroVia = $letra1 = $bis = $direccionSurNorte = $numeral = $numero2 = $letra3 = $guion = $numero3 = $direccionEsteOeste = $infoAdicionalDireccion = '';
+        $tipoVia = $numeroVia = $letra1 = $bis = $direccionSurNorte = $numeral = $numero2 = $letra3 = $guion = $numero3 = $direccionEsteOeste = $bogota = $infoAdicionalDireccion = '';
 
         // Recorrer las partes y asignarlas a las variables correspondientes.
         foreach ($parts as $part) {
@@ -70,6 +71,8 @@ if (isset($_GET['id'])) {
                     $guion = $part;
                 } elseif ($direccionEsteOeste === '') {
                     $direccionEsteOeste = $part;
+                } elseif ($bogota === '') {
+                    $bogota = $part;
                 } elseif ($infoAdicionalDireccion === '') {
                     $infoAdicionalDireccion = $part;
                 }
@@ -105,23 +108,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar_establecimiento
     $direccionEsteOeste = $_POST['direccion_este_oeste'];
     $infoAdicionalDireccion = $_POST['info_adicional'];
 
-    $direccionCompleta = $tipoVia . '¬' . $numeroVia . '¬' . $letra1 . '¬' . $bis . '¬' . $direccionSurNorte . '¬#¬' . $numero2 . '¬' . $letra3 . '¬-¬' . $numero3 . '¬' . $direccionEsteOeste . '¬' . $infoAdicionalDireccion;
 
     $sqlImagenes = "SELECT * FROM imagenes_establecimiento WHERE id_establecimiento = ?";
     $stmtImagenes = $conexion->prepare($sqlImagenes);
     $stmtImagenes->bind_param("i", $establecimientoId);
     $stmtImagenes->execute();
     $resultImagenes = $stmtImagenes->get_result();
-    // Consulta para actualizar los detalles del establecimiento en la base de datos
+
+    $archivos = $_FILES['photos']['name'];
+    $carpeta_destino = 'php/Imagen_guardar/';
+
+    if (!empty($_FILES['photos']['name'])) {
+        foreach ($_FILES['photos']['name'] as $key => $archivo) {
+            // Obtener la extensión del archivo
+            $extension = pathinfo($archivo, PATHINFO_EXTENSION);
+    
+            // Construir el nuevo nombre de archivo
+            $nombre_archivo = $nombreEstablecimiento . $nit . ($key + 1) . '.jpg'; // Cambié la extensión a .jpg
+    
+            // Define la ruta de destino correcta
+            $carpeta_destino = 'php/Imagen_guardar/';  // Asegúrate de que esta ruta sea correcta
+            $ruta_destino = $carpeta_destino . $nombre_archivo;
+    
+            // Convertir la imagen a formato JPG
+            if ($extension !== 'jpg') {
+                $imagen = imagecreatefromstring(file_get_contents($_FILES['photos']['tmp_name'][$key]));
+                imagejpeg($imagen, $_FILES['photos']['tmp_name'][$key], 100); // 100 es la calidad, puedes ajustarlo según tus necesidades
+            }
+    
+            move_uploaded_file($_FILES['photos']['tmp_name'][$key], $ruta_destino);
+    
+            // Insertar información de la imagen en la base de datos
+            $sqlImagen = "INSERT INTO imagenes_establecimiento (id_establecimiento, nombre_archivo, ruta_destino)
+                VALUES (?, ?, ?)";
+            $stmtImagen = $conexion->prepare($sqlImagen);
+            $stmtImagen->bind_param("iss", $establecimientoId, $nombre_archivo, $ruta_destino);
+            $stmtImagen->execute();
+        }
+    }
+    
+
+
+    $direccion = $tipoVia . '¬' . $numeroVia . '¬' . $letra1 . '¬' . $bis . '¬' . $direccionSurNorte . '¬#¬' . $numero2 . '¬' . $letra3 . '¬-¬' . $numero3 . '¬' . $direccionEsteOeste . '¬' . $infoAdicionalDireccion;
+
+    
     $sql = "UPDATE registro_de_establecimiento SET Nombre_del_establecimiento=?, Direccion_de_establecimiento=?, Telefono=?, Informacion_adicional=?, Nit=?, localidad=?, id_tipo_de_establecimiento=? WHERE Id_registro=?";
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("sssssssi", $nombreEstablecimiento, $direccion, $telefono, $informacionAdicional, $nit, $localidad, $tipoEstablecimiento, $establecimientoId);
 
     if ($stmt->execute()) {
-        // Establecimiento actualizado con éxito, puedes redirigir a una página de éxito o mostrar un mensaje aquí.
-        echo '<div class="alert alert-success" role="alert">
-            Establecimiento registrado de forma exitosa
-            </div>';
+        $establecimientomodificado = true;
+
+        echo '<script>setTimeout(function(){ window.location.href = "./mis_registros.php"; }, 1000);</script>';
+
     } else {
         // Error al actualizar el establecimiento, muestra un mensaje de error.
         echo "Error al actualizar el establecimiento: " . $stmt->error;
@@ -212,8 +251,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
                         <?php
                         if (isset($_SESSION['user_id'])) {
                             echo '<li class="nav-item">
-                                <a class="nav-link amarillo" id="calendario" href="./reg_establecimiento.php">Deseas registrar tu establecimiento</a>
-                                </li>';
+                            <a class="nav-link amarillo" id="calendario" href="./reg_establecimiento.php">Registra tu establecimiento</a>
+                            </li>';
                         } else {
                             echo '';
                         }
@@ -226,20 +265,89 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <form method="post" action="" class="editar">
+                    <form method="post" action="" class="editar" enctype="multipart/form-data">
                         <h2 class="mb-4">Editar Establecimiento</h2>
 
                         <div class="form-group">
                             <label for="nombre_establecimiento">Nombre del Establecimiento:</label>
-                            <input type="text" class="form-control" id="nombre_establecimiento"
-                                name="nombre_establecimiento" value="<?php echo $row['Nombre_del_establecimiento']; ?>">
+                            <input type="text" class="form-control" name="nombre_establecimiento" maxlength="30"
+                                pattern=".*\S.*" title="Ingresa el nombre del establecimiento (máximo 30 caracteres)"
+                                required value="<?php echo $row['Nombre_del_establecimiento']; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="localidad">Localidad:</label>
+                            <?php if ($row['localidad'] == 'Chapinero') {
+                                echo 'selected';
+                            } ?>
+                            <select class="form-control" name="localidad"
+                                title="Selecciona la localidad en la que se úbica tu establecimiento" required>
+                                <option value="" disabled selected>Seleccione La Localidad</option>
+                                <option value="Chapinero" <?php if ($row['localidad'] == 'Chapinero') {
+                                    echo 'selected';
+                                } ?>>Chapinero</option>
+                                <option value="Santa_Fe" <?php if ($row['localidad'] == 'Santa Fe') {
+                                    echo 'selected';
+                                } ?>>Santa Fe</option>
+                                <option value="San_Cristobal" <?php if ($row['localidad'] == 'San Cristobal') {
+                                    echo 'selected';
+                                } ?>>San Cristobal</option>
+                                <option value="Usme" <?php if ($row['localidad'] == 'Usme') {
+                                    echo 'selected';
+                                } ?>>Usmeo
+                                </option>
+                                <option value="Tunjuelito" <?php if ($row['localidad'] == 'Tunjuelito') {
+                                    echo 'selected';
+                                } ?>>Tunjuelito</option>
+                                <option value="Bosa" <?php if ($row['localidad'] == 'Bosa') {
+                                    echo 'selected';
+                                } ?>>Bosa
+                                </option>
+                                <option value="Kennedy" <?php if ($row['localidad'] == 'Kennedy') {
+                                    echo 'selected';
+                                } ?>>
+                                    Kennedy</option>
+                                <option value="Suba" <?php if ($row['localidad'] == 'Suba') {
+                                    echo 'selected';
+                                } ?>>Suba
+                                </option>
+                                <option value="Usaquen" <?php if ($row['localidad'] == 'Usaquén') {
+                                    echo 'selected';
+                                } ?>>
+                                    Usaquén</option>
+                                <option value="Barrios_Unidos" <?php if ($row['localidad'] == 'Barrios Unidos') {
+                                    echo 'selected';
+                                } ?>>Barrios Unidos</option>
+                                <option value="Teusaquillo" <?php if ($row['localidad'] == 'Teusaquillo') {
+                                    echo 'selected';
+                                } ?>>Teusaquillo</option>
+                                <option value="Los_Martires" <?php if ($row['localidad'] == 'Los Mártires') {
+                                    echo 'selected';
+                                } ?>>Los Mártires</option>
+                                <option value="Puente_Aranda" <?php if ($row['localidad'] == 'Puente Aranda') {
+                                    echo 'selected';
+                                } ?>>Puente Aranda</option>
+                                <option value="La_Candelaria" <?php if ($row['localidad'] == 'La Candelaria') {
+                                    echo 'selected';
+                                } ?>>La Candelaria</option>
+                                <option value="Rafael_Uribe_Uribe" <?php if ($row['localidad'] == 'Rafael Uribe Uribe') {
+                                    echo 'selected';
+                                } ?>>Rafael Uribe Uribe</option>
+                                <option value="Ciudad_Bolívar" <?php if ($row['localidad'] == 'Ciudad Bolivar') {
+                                    echo 'selected';
+                                } ?>>Ciudad Bolívar</option>
+                                <option value="Sumapaz" <?php if ($row['localidad'] == 'Sumapaz') {
+                                    echo 'selected';
+                                } ?>>
+                                    Sumapaz</option>
+                            </select>
                         </div>
                         <div class="form-group" id="Direccion_de_establecimiento" name="Direccion_de_establecimiento">
                             <label for="Direccion_de_establecimiento">Dirección</label>
                             <div class="row justify-content-center align-items-center" id="direccion_inputs">
                                 <div class="col-md-4 text-center" id="tipovia" name="tipovia">
                                     <label for="tipo_via">Tipo de vía</label>
-                                    <select class="form-control" name="tipo_via" required>
+                                    <select class="form-control" name="tipo_via" title="Selecciona el tipo de vía"
+                                        required>
                                         <option value="" disabled></option>
                                         <option value="calle" <?php echo ($tipoVia === 'calle') ? 'selected' : ''; ?>>
                                             Calle</option>
@@ -252,12 +360,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
 
                                 <div class="col-md-2 text-center" id="n1" name="n1">
                                     <label for="numero">n° vía</label>
-                                    <input type="text" class="form-control" name="numero" maxlength="3"
-                                        value="<?php echo ($numeroVia); ?>" required>
+                                    <input type="text" class="form-control" name="numero" minlength="1" maxlength="3"
+                                        required pattern="[0-9]+" title="Ingresa solo números (máximo 3)"
+                                        value="<?php echo ($numeroVia); ?>">
                                 </div>
                                 <div class="col-md-2 text-center" id="letra1">
                                     <label for="letra_1">Letra</label>
-                                    <select class="form-control" name="letra_1" required>
+                                    <select class="form-control" name="letra_1" itle="Selecciona la letra de tu vía"
+                                        required>
                                         <option value="~" <?php echo ($letra1 === '~') ? 'selected' : ''; ?>></option>
                                         <option value="a" <?php echo ($letra1 === 'a') ? 'selected' : ''; ?>>A</option>
                                         <option value="b" <?php echo ($letra1 === 'b') ? 'selected' : ''; ?>>B</option>
@@ -270,7 +380,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
 
                                 <div class="col-md-2 text-center" id="bis1">
                                     <label for="bis">Bis</label>
-                                    <select class="form-control" name="bis" required>
+                                    <select class="form-control" name="bis" title="Selecciona si tu dirección tiene bis"
+                                        required>
                                         <option value="bis" <?php echo ($bis === 'bis') ? 'selected' : ''; ?>>Bis</option>
                                         <option value="~" <?php echo ($bis === '~') ? 'selected' : ''; ?>></option>
                                     </select>
@@ -278,7 +389,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
 
                                 <div class="col-md-3 text-center" id="SON">
                                     <label for="direccion_sur_norte">Sur o Norte</label>
-                                    <select class="form-control" name="direccion_sur_norte" required>
+                                    <select class="form-control" name="direccion_sur_norte"
+                                        title="Selecciona si tu dirección tiene sur o norte" required>
                                         <option value="~" <?php echo ($direccionSurNorte === '~') ? 'selected' : ''; ?>>
                                         </option>
                                         <option value="sur" <?php echo ($direccionSurNorte === 'sur') ? 'selected' : ''; ?>>Sur</option>
@@ -288,12 +400,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
                                 <label for="">#</label>
                                 <div class="col-md-2 text-center" id="n2" name="n2">
                                     <label for="numero_2">n°1</label>
-                                    <input type="text" class="form-control" name="numero_2" maxlength="3"
-                                        value="<?php echo ($numero2); ?>" required>
+                                    <input type="text" class="form-control" name="numero_2" minlength="1" maxlength="3"
+                                        required pattern="[0-9]+" title="Ingresa solo números (máximo 3)"
+                                        value="<?php echo ($numero2); ?>">
                                 </div>
                                 <div class="col-md-2 text-center" id="letra3" name="letra3">
                                     <label for="letra_3">Letra</label>
-                                    <select class="form-control" name="letra_3" required>
+                                    <select class="form-control" name="letra_3" title="Selecciona la letra de tu vía"
+                                        required>
                                         <option value="~" <?php echo ($letra3 === '~') ? 'selected' : ''; ?>></option>
                                         <option value="a" <?php echo ($letra3 === 'a') ? 'selected' : ''; ?>>A</option>
                                         <option value="b" <?php echo ($letra3 === 'b') ? 'selected' : ''; ?>>B</option>
@@ -306,12 +420,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
                                 <label for="">-</label>
                                 <div class="col-md-2 text-center" id="n3" name="n3">
                                     <label for="numero_3">n°2</label>
-                                    <input type="text" class="form-control" name="numero_3" maxlength="3"
-                                        value="<?php echo ($numero3); ?>" required>
+                                    <input type="text" class="form-control" name="numero_3" minlength="1" maxlength="3"
+                                        required pattern="[0-9]+" title="Ingresa solo números (máximo 3)"
+                                        value="<?php echo ($numero3); ?>">
                                 </div>
                                 <div class="col-md-3 text-center" id="EOO">
                                     <label for="direccion_este_oeste">Este - Oeste</label>
-                                    <select class="form-control" name="direccion_este_oeste" required>
+                                    <select class="form-control" name="direccion_este_oeste"
+                                        title="Selecciona si tu dirección tiene este/oeste" required>
                                         <option value="~" <?php echo ($direccionEsteOeste === '~') ? 'selected' : ''; ?>>
                                         </option>
                                         <option value="este" <?php echo ($direccionEsteOeste === 'este') ? 'selected' : ''; ?>>Este</option>
@@ -322,94 +438,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
                                 <div class="col-md-12" id="info" name="info">
                                     <label for="info_adicional">Información Adicional de Dirección</label>
                                     <textarea type="text" class="form-control" name="info_adicional" maxlength="30"
-                                        required> <?php echo ($infoAdicionalDireccion); ?></textarea>
+                                        title="Si tu dirección tiene datos adicionales, ingresalos aquí. (max 30 carácteres)"> <?php echo ($infoAdicionalDireccion); ?></textarea>
                                 </div>;
 
                             </div>
                             <div class="form-group">
                                 <label for="telefono">Teléfono:</label>
-                                <input type="text" class="form-control" id="telefono" name="telefono"
+                                <input type="text" class="form-control" id="telefono" name="telefono" maxlength="10"
+                                    minlength="10" pattern="[0-9]+"
+                                    title="Ingresa tu número de telefono, sin simbolos ni letras" required
                                     value="<?php echo $row['Telefono']; ?>">
                             </div>
                             <div class="form-group">
                                 <label for="informacion_adicional">Información Adicional:</label>
-                                <textarea class="form-control" id="informacion_adicional"
-                                    name="informacion_adicional"><?php echo $row['Informacion_adicional']; ?></textarea>
+                                <textarea class="form-control" id="informacion_adicional" name="informacion_adicional"
+                                    maxlength="250"
+                                    title="Ingresa la descripción que quieres darle a tu lugar (max 250 carácteres)"
+                                    required><?php echo $row['Informacion_adicional']; ?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="nit">NIT:</label>
-                                <input type="text" class="form-control" id="nit" name="nit"
+                                <input type="text" class="form-control" id="nit" name="nit" pattern="[0-9]{9}|[0-9]{11}"
+                                    title="Ingresa 9 dígitos (persona natural) o 11 dígitos (persona jurídica)" required
                                     value="<?php echo $row['Nit']; ?>">
                             </div>
-                            <div class="form-group">
-                                <label for="localidad">Localidad:</label>
-                                <?php if ($row['localidad'] == 'Chapinero') {
-                                    echo 'selected';
-                                } ?>
-                                <select class="form-control" name="localidad" required>
-                                    <option value="" disabled selected>Seleccione La Localidad</option>
-                                    <option value="Chapinero" <?php if ($row['localidad'] == 'Chapinero') {
-                                        echo 'selected';
-                                    } ?>>Chapinero</option>
-                                    <option value="Santa Fe" <?php if ($row['localidad'] == 'Santa Fe') {
-                                        echo 'selected';
-                                    } ?>>Santa Fe</option>
-                                    <option value="San Cristobal" <?php if ($row['localidad'] == 'San Cristobal') {
-                                        echo 'selected';
-                                    } ?>>San Cristobal</option>
-                                    <option value="Usme" <?php if ($row['localidad'] == 'Usme') {
-                                        echo 'selected';
-                                    } ?>>Usmeo
-                                    </option>
-                                    <option value="Tunjuelito" <?php if ($row['localidad'] == 'Tunjuelito') {
-                                        echo 'selected';
-                                    } ?>>Tunjuelito</option>
-                                    <option value="Bosa" <?php if ($row['localidad'] == 'Bosa') {
-                                        echo 'selected';
-                                    } ?>>Bosa
-                                    </option>
-                                    <option value="Kennedy" <?php if ($row['localidad'] == 'Kennedy') {
-                                        echo 'selected';
-                                    } ?>>
-                                        Kennedy</option>
-                                    <option value="Suba" <?php if ($row['localidad'] == 'Suba') {
-                                        echo 'selected';
-                                    } ?>>Suba
-                                    </option>
-                                    <option value="Usaquén" <?php if ($row['localidad'] == 'Usaquén') {
-                                        echo 'selected';
-                                    } ?>>
-                                        Usaquén</option>
-                                    <option value="Barrios Unidos" <?php if ($row['localidad'] == 'Barrios Unidos') {
-                                        echo 'selected';
-                                    } ?>>Barrios Unidos</option>
-                                    <option value="Teusaquillo" <?php if ($row['localidad'] == 'Teusaquillo') {
-                                        echo 'selected';
-                                    } ?>>Teusaquillo</option>
-                                    <option value="Los Mártires" <?php if ($row['localidad'] == 'Los Mártires') {
-                                        echo 'selected';
-                                    } ?>>Los Mártires</option>
-                                    <option value="Puente Aranda" <?php if ($row['localidad'] == 'Puente Aranda') {
-                                        echo 'selected';
-                                    } ?>>Puente Aranda</option>
-                                    <option value="La Candelaria" <?php if ($row['localidad'] == 'La Candelaria') {
-                                        echo 'selected';
-                                    } ?>>La Candelaria</option>
-                                    <option value="Rafael Uribe Uribe" <?php if ($row['localidad'] == 'Rafael Uribe Uribe') {
-                                        echo 'selected';
-                                    } ?>>Rafael Uribe Uribe</option>
-                                    <option value="Ciudad Bolívar" <?php if ($row['localidad'] == 'Ciudad Bolivar') {
-                                        echo 'selected';
-                                    } ?>>Ciudad Bolívar</option>
-                                    <option value="Sumapaz" <?php if ($row['localidad'] == 'Sumapaz') {
-                                        echo 'selected';
-                                    } ?>>
-                                        Sumapaz</option>
-                                </select>
-                            </div>
+
                             <div class="form-group">
                                 <label for="tipo_establecimiento">Tipo de Establecimiento:</label>
-                                <select class="form-control" name="tipo_establecimiento" required>
+                                <select class="form-control" name="tipo_establecimiento" title="Selecciona que tipo de establecimiento tienes." required>
                                     <option value="" disabled selected>Seleccione el Tipo de Establecimiento</option>
                                     <option value="restaurante" <?php if ($row['id_tipo_de_establecimiento'] == 'restaurante') {
                                         echo 'selected';
@@ -429,8 +485,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
                             <div class="input-group mb-3">
                                 <label for="photos" class="custom-file-label">.</label>
                                 <input type="file" class="custom-file-input" id="photos" name="photos[]"
-                                    accept="image/*" multiple required onchange="handleFileSelect(event)">
-                                <div id="image-preview" class="image-preview"></div>
+                                    accept="image/*" multiple onchange="handleFileSelect(event)">
+                                <div id="image-preview" class="image-preview" title="Selecciona las imagenes de tu establecimiento que quieres mostrar."></div>
                             </div>
                             <div class="thumbnail-container" id="thumbnail-container"></div>
                             <br>
@@ -546,7 +602,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
             </p>
         </nav>
     </footer>
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000"
+        style="position: absolute; top: 100px; right: 0; margin: 15px; display:none">
+        <div class="toast-header">
+            <strong class="mr-auto">
+                <?php
+                if ($establecimientomodificado) {
+                    echo "Registro Editado";
+                } else {
+                    echo "Error en el registro";
+                }
+                ?>
+            </strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <?php
+            if ($establecimientomodificado) {
+                echo "Serás redireccionado en 1 segundo.";
+            } else {
+                echo "Hubo un error en el registro. Inténtalo de nuevo.";
+            }
+            ?>
+        </div>
+    </div>
 
+    <script>
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo '$(document).ready(function() { $(".toast").toast("show").css("display", "block"); });';
+        }
+        ?>
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -672,10 +761,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
                         id_imagen: idImagen
                     },
                     success: function (response) {
-                        // Maneja la respuesta del servidor, por ejemplo, muestra un mensaje o actualiza la interfaz de usuario.
-                        alert(response);
 
-                        // Encuentra la miniatura correspondiente por el data-id y elimínala del DOM
                         var thumbnailToRemove = document.querySelector('.thumbnail-bd[data-id="' + idImagen + '"]');
                         if (thumbnailToRemove) {
                             thumbnailToRemove.remove();
@@ -826,7 +912,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_imagen'])) {
     }
 
     .btn {
-        width: 30%;
         display: block;
         padding: 7px 10px;
         border-radius: 5px;

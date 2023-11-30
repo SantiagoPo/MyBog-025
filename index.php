@@ -9,7 +9,7 @@ require_once('./config/conexion.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyBogotá</title>
+    <title>MyBog</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style/HeaderFooter.css">
     <link rel="stylesheet" type="text/css" href="style/inicio.css">
@@ -117,10 +117,43 @@ require_once('./config/conexion.php');
             </p>
         </nav>
     </footer>
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000"
+        style="position: absolute; bottom: 0; right: 0; margin: 15px; display:none">
+        <div class="toast-header">
+            <strong class="mr-auto">
+                <?php
+                if (isset($_GET['mensajeenviado']) && $_GET['mensajeenviado'] == 'true') {
+                    echo "Mensaje Enviado";
+                }
+                ?>
+            </strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <?php
+            if (isset($_GET['mensajeenviado']) && $_GET['mensajeenviado'] == 'true') {
+                echo "Nos comunicaremos contigo.";
+            }
+            ?>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            <?php
+            if (isset($_GET['mensajeenviado']) && $_GET['mensajeenviado'] == 'true') {
+                echo '$(".toast:eq(0)").toast("show").css("display", "block");';
+            }
+
+            ?>
+        });
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="./Funcionamiento_por_js/editar_usuario.js"></script>
-    
+
     <script>
         // Cuando el documento está completamente cargado
         $(document).ready(function () {
@@ -149,7 +182,7 @@ require_once('./config/conexion.php');
         });
 
     </script>
-    
+
 </body>
 
 </html>

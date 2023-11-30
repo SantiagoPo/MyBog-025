@@ -410,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `registro_de_establecimiento` (
   `Direccion_de_establecimiento` varchar(50) NOT NULL,
   `Id_Usuario` int NOT NULL,
   `Informacion_adicional` varchar(250) DEFAULT NULL,
-  `Nit` varchar(45) DEFAULT NULL,
+  `Nit` varchar(45) UNIQUE DEFAULT NULL,
   `localidad` varchar(45) DEFAULT NULL,
   `id_tipo_de_establecimiento` varchar(45) DEFAULT NULL,
   `Telefono` varchar(45) DEFAULT NULL,

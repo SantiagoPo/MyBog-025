@@ -140,7 +140,7 @@ $result = $stmt->get_result();
                                     <?php echo $row['Nombre_del_establecimiento']; ?>
                                 </td>
                                 <td>
-                                    <?php echo str_replace(['~', '¬'], ' ', $row['Direccion_de_establecimiento']); ?>
+                                    <?php echo str_replace(['~', '¬', 'Bogotá,', '_'], ' ', $row['Direccion_de_establecimiento']); ?>
                                 </td>
 
                                 <td>
@@ -153,7 +153,7 @@ $result = $stmt->get_result();
                                     <?php echo $row['Nit']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $row['localidad']; ?>
+                                    <?php echo str_replace(['_'], ' ', $row['localidad']); ?>
                                 </td>
                                 <td>
                                     <?php echo $row['id_tipo_de_establecimiento']; ?>

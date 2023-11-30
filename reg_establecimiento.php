@@ -1,11 +1,17 @@
 <?php
 include_once('config/conexion.php');
 
+$establecimientoregistrado = false;
+
 if (!isset($_SESSION['user_id'])) {
-    // Redirige a main.php
     header('Location: ./main.php');
     exit();
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    include_once('./php/procesar_registro_establecimiento.php');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -59,41 +65,44 @@ if (!isset($_SESSION['user_id'])) {
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="login-box">
-                        <form action="php/procesar_registro_establecimiento.php" method="post"
-                            enctype="multipart/form-data">
+                        <form action="reg_establecimiento.php" method="post" enctype="multipart/form-data">
                             <div class="form-group" name="nombre_establecimiento" id="nombre_establecimiento">
                                 <label for="nombre_establecimiento">Nombre del Establecimiento</label>
-                                <input type="text" class="form-control" name="nombre_establecimiento" required>
+                                <input type="text" class="form-control" name="nombre_establecimiento" maxlength="30"
+                                    pattern=".*\S.*" title="Ingresa el nombre del establecimiento (máximo 30 caracteres)" required>
                             </div>
                             <div class="form-group">
                                 <label for="localidad">Localidad</label>
-                                <select class="form-control" id="localidad" name="localidad" required>
+                                <select class="form-control" id="localidad" name="localidad"
+                                    title="Selecciona la localidad en la que se úbica tu establecimiento" required>
                                     <option value="" disabled selected></option>
                                     <option value="Chapinero">Chapinero</option>
-                                    <option value="Santa Fe">Santa Fe</option>
-                                    <option value="San Cristobal">San Cristobal</option>
+                                    <option value="Santa_Fe">Santa Fe</option>
+                                    <option value="San_Cristobal">San Cristobal</option>
                                     <option value="Usme">Usmeo</option>
                                     <option value="Tunjuelito">Tunjuelito</option>
                                     <option value="Bosa">Bosa</option>
                                     <option value="Kennedy">Kennedy</option>
                                     <option value="Suba">Suba</option>
                                     <option value="Usaquén">Usaquén</option>
-                                    <option value="Barrios Unidos">Barrios Unidos</option>
+                                    <option value="Barrios_Unidos">Barrios Unidos</option>
                                     <option value="Teusaquillo">Teusaquillo</option>
-                                    <option value="Los Mártires">Los Mártires</option>
-                                    <option value="Puente Aranda">Puente Aranda</option>
+                                    <option value="Los_Martires">Los Mártires</option>
+                                    <option value="Puente_Aranda">Puente Aranda</option>
                                     <option value="La Candelaria">La Candelaria</option>
-                                    <option value="Rafael Uribe Uribe">Rafael Uribe Uribe</option>
-                                    <option value="Ciudad Bolívar">Ciudad Bolívar</option>
+                                    <option value="Rafael_Uribe_Uribe">Rafael Uribe Uribe</option>
+                                    <option value="Ciudad_Bolívar">Ciudad Bolívar</option>
                                     <option value="Sumapaz">Sumapaz</option </select>
                                 </select>
                             </div>
-                            <div class="form-group" id="Direccion_de_establecimiento" name="Direccion_de_establecimiento">
+                            <div class="form-group" id="Direccion_de_establecimiento"
+                                name="Direccion_de_establecimiento">
                                 <label for="Direccion_de_establecimiento">Dirección</label>
                                 <div class="row justify-content-center align-items-center" id="direccion_inputs">
                                     <div class="col-md-4 text-center" id="tipovia" name="tipovia">
                                         <label for="tipo_via">Tipo de vía</label>
-                                        <select class="form-control" name="tipo_via" required>
+                                        <select class="form-control" name="tipo_via" title="Selecciona el tipo de vía"
+                                            required>
                                             <option value="" disabled selected></option>
                                             <option value="calle">Calle</option>
                                             <option value="carrera">Carrera</option>
@@ -103,30 +112,35 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="col-md-2 text-center" id="n1" name="n1">
                                         <label for="numero">n° vía</label>
-                                        <input type="text" class="form-control" name="numero" maxlength="3" required>
+                                        <input type="text" class="form-control" name="numero" minlength="1"
+                                            maxlength="3" required pattern="[0-9]+"
+                                            title="Ingresa solo números (máximo 3)">
                                     </div>
                                     <div class="col-md-2 text-center" id="letra1" name="letra1">
                                         <label for="letra_1">Letra</label>
-                                        <select class="form-control" name="letra_1" required>
-                                        <option value="~" selected></option>
+                                        <select class="form-control" name="letra_1"
+                                            title="Selecciona la letra de tu vía" required>
+                                            <option value="~" selected></option>
                                             <option value="a">A</option>
                                             <option value="b">B</option>
                                             <option value="c">C</option>
                                             <option value="d">D</option>
                                             <option value="e">E</option>
-                                            <option value="f">F</option>                                            
+                                            <option value="f">F</option>
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-center" id="bis1" name="bis1">
                                         <label for="bis">Bis</label>
-                                        <select class="form-control" name="bis" required>
+                                        <select class="form-control" name="bis"
+                                            title="Selecciona si tu dirección tiene bis" required>
                                             <option value="~" selected></option>
                                             <option value="bis">Bis</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3 text-center" id="SON" name="SON">
                                         <label for="direccion_sur_norte">Sur o Norte</label>
-                                        <select class="form-control" name="direccion_sur_norte" required>
+                                        <select class="form-control" name="direccion_sur_norte"
+                                            title="Selecciona si tu dirección tiene sur o norte" required>
                                             <option value="~" selected></option>
                                             <option value="sur">Sur</option>
                                             <option value="norte">Norte</option>
@@ -135,11 +149,14 @@ if (!isset($_SESSION['user_id'])) {
                                     <label for="">#</label>
                                     <div class="col-md-2 text-center" id="n2" name="n2">
                                         <label for="numero_2">n°1</label>
-                                        <input type="text" class="form-control" name="numero_2" maxlength="3" required>
+                                        <input type="text" class="form-control" name="numero_2" minlength="1"
+                                            maxlength="3" required pattern="[0-9]+"
+                                            title="Ingresa solo números (máximo 3)">
                                     </div>
                                     <div class="col-md-2 text-center" id="letra3" name="letra3">
                                         <label for="letra_3">Letra</label>
-                                        <select class="form-control" name="letra_3" required>
+                                        <select class="form-control" name="letra_3"
+                                            title="Selecciona la letra de tu vía" required>
                                             <option value="~" selected></option>
                                             <option value="a">A</option>
                                             <option value="b">B</option>
@@ -152,11 +169,14 @@ if (!isset($_SESSION['user_id'])) {
                                     <label for="">-</label>
                                     <div class="col-md-2 text-center" id="n3" name="n3">
                                         <label for="numero_3">n°2</label>
-                                        <input type="text" class="form-control" name="numero_3" maxlength="3" required>
+                                        <input type="text" class="form-control" name="numero_3" minlength="1"
+                                            maxlength="3" required pattern="[0-9]+"
+                                            title="Ingresa solo números (máximo 3)">
                                     </div>
                                     <div class="col-md-3 text-center" id="EOO" name="EOO">
                                         <label for="direccion_este_oeste">Este - Oeste</label>
-                                        <select class="form-control" name="direccion_este_oeste" required>
+                                        <select class="form-control" name="direccion_este_oeste"
+                                            title="Selecciona si tu dirección tiene este/oeste" required>
                                             <option value="~" selected></option>
                                             <option value="este">Este</option>
                                             <option value="oeste">Oeste</option>
@@ -165,27 +185,33 @@ if (!isset($_SESSION['user_id'])) {
                                     <div class="col-md-12" id="info" name="info">
                                         <label for="info_adicional">Información Adicional de Dirección</label>
                                         <textarea type="text" class="form-control" name="info_adicional" maxlength="30"
-                                            required></textarea>
+                                            title="Si tu dirección tiene datos adicionales, ingresalos aquí. (max 30 carácteres)"></textarea>
                                     </div>;
 
                                 </div>
                             </div>
                             <div class="form-group" id="telefono1" name="telefono1">
                                 <label for="telefono">Teléfono</label>
-                                <input type="tel" class="form-control" name="telefono" pattern="[0-9]{10}" required>
+                                <input type="tel" class="form-control" name="telefono" maxlength="10" minlength="10"
+                                    pattern="[0-9]+" title="Ingresa tu número de telefono, sin simbolos ni letras"
+                                    required>
                             </div>
                             <div class="form-group" id="infoadd" name="infoadd">
                                 <label for="informacion_adicional">Información Adicional</label>
-                                <textarea class="form-control" rows="3" name="informacion_adicional" maxlength="250"
+                                <textarea type="text" class="form-control" id="informacion_adicional" name="informacion_adicional" maxlength="250"
+                                    title="Ingresa la descripción que quieres darle a tu lugar (max 250 carácteres)"
                                     required></textarea>
                             </div>
                             <div class="form-group" id="nit1" name="nit1">
                                 <label for="nit">NIT</label>
-                                <input type="text" class="form-control" name="nit" pattern="[0-9]{9,11}" required>
+                                <input type="text" class="form-control" name="nit" pattern="[0-9]{9}|[0-9]{11}"
+                                    title="Ingresa 9 dígitos (persona natural) o 11 dígitos (persona jurídica)"
+                                    required>
                             </div>
+
                             <div class="form-group" id="tipo_est" name="nit">
                                 <label for="tipo_establecimiento">Tipo de Establecimiento</label>
-                                <select class="form-control" name="tipo_establecimiento" required>
+                                <select class="form-control" name="tipo_establecimiento" title="Selecciona que tipo de establecimiento tienes." required>
                                     <option value="" disabled selected></option>
                                     <option value="restaurante">Restaurante</option>
                                     <option value="hotel">Hotel</option>
@@ -201,7 +227,7 @@ if (!isset($_SESSION['user_id'])) {
                                 <label for="photos" class="custom-file-label">.</label>
                                 <input type="file" class="custom-file-input" id="photos" name="photos[]"
                                     accept="image/*" multiple required onchange="handleFileSelect(event)">
-                                <div id="image-preview" class="image-preview"></div>
+                                <div id="image-preview" class="image-preview" title="Selecciona las imagenes de tu establecimiento que quieres mostrar."></div>
                             </div>
                             <div class="thumbnail-container" id="thumbnail-container"></div>
                             <br>
@@ -251,6 +277,38 @@ if (!isset($_SESSION['user_id'])) {
                 </p>
             </nav>
         </footer>
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000"
+            style="position: absolute; top: 100px; right: 0; margin: 15px; display:none">
+            <div class="toast-header">
+                <strong class="mr-auto">
+                    <?php
+                    if (isset($_GET['nitinvalido']) && $_GET['nitinvalido'] == 'true') {
+                        echo "Nit Invalido";
+                    }
+                    ?>
+                </strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                <?php
+                if (isset($_GET['nitinvalido']) && $_GET['nitinvalido'] == 'true') {
+                    echo "Este nit le pertenece a otro local    .";
+                }
+                ?>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                <?php
+                if (isset($_GET['nitinvalido']) && $_GET['nitinvalido'] == 'true') {
+                    echo '$(".toast:eq(0)").toast("show").css("display", "block");';
+                }
+
+                ?>
+            });
+        </script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

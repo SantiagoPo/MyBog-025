@@ -68,6 +68,16 @@ class ComposerStaticInitb24436105fe7fa287a5720983209f210
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'a' => 
+        array (
+            'abeautifulsite' => 
+            array (
+                0 => __DIR__ . '/..' . '/claviska/simpleimage/src',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
@@ -82,6 +92,7 @@ class ComposerStaticInitb24436105fe7fa287a5720983209f210
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitb24436105fe7fa287a5720983209f210::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitb24436105fe7fa287a5720983209f210::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb24436105fe7fa287a5720983209f210::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitb24436105fe7fa287a5720983209f210::$classMap;
 
         }, null, ClassLoader::class);

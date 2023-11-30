@@ -14,13 +14,11 @@ try {
         $sql = "INSERT INTO formulario_contacto (nombre, email, mensaje) VALUES ('$nombre', '$email', '$mensaje')";
 
         if ($conexion->query($sql)) {
-            echo '<div class="alert alert-success" role="alert">
-                Formulario enviado
-            </div>';
+            
             echo '<script>
             setTimeout(function(){
-            window.location.href = "../index.php"; 
-            }, 1000);  
+            window.location.href = "../index.php?mensajeenviado=true"; 
+            }, 0);  
             </script>';
         } else {
             throw new Exception();
@@ -33,13 +31,10 @@ try {
     // Cerrar la conexión a la base de datos
     $conexion->close();
 } catch (Exception $e) {
-    echo '<div class="alert alert-danger" role="alert">
-        Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.
-    </div>';
     echo '<script>
     setTimeout(function() {
       window.location.href = "../main.php";
-    }, 1000);
+    }, 2000);
   </script>';
 
 }

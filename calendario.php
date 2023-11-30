@@ -1,6 +1,9 @@
 <?php
 require_once('./config/conexion.php');
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    include_once('./save_schedule.php');
+}
 
 ?>
 <!DOCTYPE html>
@@ -80,7 +83,7 @@ require_once('./config/conexion.php');
                         </div>
                         <div class="card-body">
                             <div class="container-fluid">
-                                <form action="save_schedule.php" method="post" id="schedule-form">
+                                <form action="calendario.php" method="post" id="schedule-form">
                                     <input type="hidden" name="id" value="">
                                     <div class="form-group mb-2">
                                         <label for="title" class="control-label">Nombre</label>
@@ -152,52 +155,87 @@ require_once('./config/conexion.php');
                 </div>
             </div>
         </div>
-        </div>
-        <?php
-        include('modales_footer.php');
-        ?>
-        <br><br><br><br>
-        <footer class="footer">
-            <nav>
-                <ul>
-                    <li><a href="#" data-toggle="modal" data-target="#modalPoliticaPrivacidad">Política de
-                            privacidad</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#modalTerminosCondiciones">Términos y
-                            condiciones</a></li>
-                    <li><a href="#" data-toggle="modal" data-target="#modalContacto">Contacto</a></li>
-                    <?php
-                    if (isset($_SESSION['user_id'])) {
-                        echo '';
-                    } else {
-                        echo '<li><a data-toggle="modal" data-target="#myModal" href="#">¿Deseas registrar tu establecimiento?</a></li>';
-                    }
-                    ?>
+    </div>
+    <?php
+    include('modales_footer.php');
+    ?>
+    <br><br><br><br>
+    <footer class="footer">
+        <nav>
+            <ul>
+                <li><a href="#" data-toggle="modal" data-target="#modalPoliticaPrivacidad">Política de
+                        privacidad</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#modalTerminosCondiciones">Términos y
+                        condiciones</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#modalContacto">Contacto</a></li>
+                <?php
+                if (isset($_SESSION['user_id'])) {
+                    echo '';
+                } else {
+                    echo '<li><a data-toggle="modal" data-target="#myModal" href="#">¿Deseas registrar tu establecimiento?</a></li>';
+                }
+                ?>
 
-                </ul>
+            </ul>
 
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="myModalLabel">Mensaje</h4>
-                                <button type="button" class="close" data-dismiss="modal"
-                                    aria-hidden="true">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                Debes estar logeado/Registrado para utilizar este servicio.
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Mensaje</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            Debes estar logeado/Registrado para utilizar este servicio.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
-                <br>
-                <p>© <?php echo date("Y"); ?> MyBog. Todos los derechos reservados.</p>
-            </nav>
-        </footer>
-    
+            </div>
+            <br>
+            <p>©
+                <?php echo date("Y"); ?> MyBog. Todos los derechos reservados.
+            </p>
+        </nav>
+    </footer>
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000"
+        style="position: absolute; bottom: 0; right: 30px; margin: 15px; display:none">
+        <div class="toast-header">
+            <strong class="mr-auto">
+                <?php
+                if ($eventoguardado) {
+                    echo "Evento Guardado";
+                } else {
+                    echo "Error en el registro";
+                }
+                ?>
+            </strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <?php
+            if ($eventoguardado) {
+                echo "Guardado correctamente.";
+            } else {
+                echo "Hubo un error en el registro. Inténtalo de nuevo.";
+            }
+
+            ?>
+        </div>
+    </div>
+
+    <script>
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo '$(document).ready(function() { $(".toast").toast("show").css("display", "block"); });';
+        }
+        ?>
+    </script>
 
     <?php
     $id_usuario = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
@@ -224,5 +262,126 @@ require_once('./config/conexion.php');
     var scheds = $.parseJSON('<?= json_encode($sched_res) ?>')
 </script>
 <script src="./js/script.js"></script>
+<style>
+    :root {
+  --bs-success-rgb: 71, 222, 152 !important;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+
+}
+
+.btn-info.text-light:hover,
+.btn-info.text-light:focus {
+  background: #000;
+}
+
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+  border-color: #ededed !important;
+  border-style: solid;
+  border-width: 1px !important;
+}
+
+.btn-primary {
+  color: rgb(255, 255, 255);
+  background-color: #ffc107;
+  border-color: transparent;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  color: #fff;
+  background-color: #f2163e;
+  border-color: #f2163e;
+}
+
+.fc .fc-highlight {
+  background: rgba(242, 22, 62, 0.3);
+  background: var(--fc-highlight-color, rgba(242, 22, 62, 0.3));
+}
+
+.bg-gradient {
+  background-color: #f2163e !important;
+}
+
+.border {
+  color: white;
+  background-color: #f2163e;
+  border: 1px solid #f2163e !important;
+}
+
+.border:hover {
+  color: rgb(255, 250, 250);
+  background-color: #ffc107;
+  border: 1px solid #ffc107 !important;
+}
+
+.rounded-0 {
+  border-radius: 10px 0px !important;
+}
+
+.card-header:first-child {
+  border-radius: 10px 0px !important;
+}
+
+@media (min-width: 768px){
+.col-md-3 {
+    flex: 0 0 auto;
+    width: 25%;
+}
+}
+
+.btn-primary.active,
+.btn-primary:active,
+.show>.btn-primary.dropdown-toggle {
+  color: rgb(255, 255, 255);
+  background-color: #f2163e;
+  border-color: #f2163e;
+}
+
+.fc-daygrid-event-dot {
+  border: 4px solid #f2163e;
+  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #f2163e);
+}
+
+.fc .fc-list-event-dot {
+  border: 5px solid #f2163e;
+  border: calc(var(--fc-list-event-dot-width, 10px) / 2) solid var(--fc-event-border-color, #f2163e);
+}
+
+a {
+  color: #f2163e;
+  text-decoration: underline;
+}
+
+.fc-h-event {
+  border: 1px solid rgba(242, 22, 62, 0.8);
+  border: 1px solid var(--fc-event-border-color, rgba(242, 22, 62, 0.8)8);
+  background-color: rgba(242, 22, 62, 0.8);
+  background-color: var(--fc-event-bg-color, rgba(242, 22, 62, 0.8));
+}
+
+.btn-primary:hover {
+  color: white;
+  background-color: #f2163e;
+  border-color: #f2163e;
+}
+
+.btn-check:focus+.btn-primary,
+.btn-primary:focus {
+  color: rgb(255, 255, 255);
+  background-color: #f2163e;
+  border-color: #f2163e;
+}
+</style>
 
 </html>

@@ -23,14 +23,7 @@ try {
 
         if ($stmtVerificarCorreo->num_rows > 0) {
             // El nuevo correo ya existe en la base de datos, por lo que no se permite la actualización
-            echo '<div class="alert alert-danger" role="alert">
-                El email ya existe. Inténtalo de nuevo.
-              </div>';
-            echo '<script>
-                  setTimeout(function() {
-                    window.location.href = "../main.php";
-                  }, 2000);
-                </script>';
+            echo '<script>setTimeout(function() {window.location.href = "../main.php";}, 2000);</script>';
         } else {
             // El nuevo correo no existe, por lo que se puede realizar la actualización
             $stmtVerificarCorreo->close();
@@ -52,36 +45,15 @@ try {
 
             if ($stmtActualizar->execute()) {
                 // Actualización exitosa
-                echo '<div class="alert alert-success" role="alert">
-                    Actualización realizada correctamente
-                  </div>';
-                echo '<script>
-                  setTimeout(function() {
-                    window.location.href = "../main.php";
-                  }, 2000);
-                </script>';
+                echo '<script>setTimeout(function() {window.location.href = "../main.php?datos_actualizados=true";}, 0);</script>';
                 session_destroy();
             } else {
                 // Error al ejecutar la consulta de actualización
-                echo '<div class="alert alert-danger" role="alert">
-                    Error al realizar la actualización. Inténtalo de nuevo.
-                  </div>';
-                echo '<script>
-                  setTimeout(function() {
-                    window.location.href = "../main.php";
-                  }, 2000);
-                </script>';
+                echo '<script>setTimeout(function() {window.location.href = "../main.php";}, 0);</script>';
             }
         }
     }
 } catch (Exception $e) {
-    echo '<div class="alert alert-danger" role="alert">
-        Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.
-      </div>';
-    echo '<script>
-      setTimeout(function() {
-        window.location.href = "../main.php";
-      }, 2000);
-    </script>';
+    header("refresh:1;url=../config/pagina_error.php");
 }
 ?>

@@ -124,10 +124,8 @@
     </script>
     <style>
         .container {
-            margin-left: 550px;
             text-align: center;
             width: 700px;
-            margin-top: 100px;
 
         }
 

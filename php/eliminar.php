@@ -33,7 +33,7 @@ try {
     throw new Exception();
   }
 } catch (Exception $e) {
-  echo '<script>setTimeout(function() {window.location.href = "../main.php";}, 100);</script>';
+  echo '<script>setTimeout(function() {window.location.href = "../main.php";}, 0);</script>';
 }
 
 ?>
