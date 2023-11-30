@@ -1,6 +1,5 @@
 <?php
 
-$correoPermitido = 'mybog@gmail.com';
 
 if (isset($_SESSION['user_id'])) {
     echo <<<HTML
@@ -20,7 +19,8 @@ if (isset($_SESSION['user_id'])) {
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#confirmLogoutModal">Cerrar sesión</a>
 HTML;
 
-    if ($_SESSION['email'] === $correoPermitido) {
+    // Verificar si el rol del usuario es "admin"
+    if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'Admin') {
         echo <<<HTML
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="./admin.php">Dashboard Admin</a>

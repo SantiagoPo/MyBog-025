@@ -6,13 +6,6 @@ body {
     background-color: rgb(255, 255, 255);
 }
 
-.titulo1 {
-    text-align: center;
-    padding: 20px;
-    background-color: #f8f9fa; /* Color de fondo suave */
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-}
 
 #searchInput {
     width: 100%;

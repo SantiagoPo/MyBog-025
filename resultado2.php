@@ -16,68 +16,79 @@ include('modales_footer.php');
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
     <style>
-        .detalle-establecimiento {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
-            overflow: hidden;
-            margin-left: 30px;
-            /* Para evitar que la imagen flote fuera del contenedor */
-        }
+    .card {
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 15px 5px 18px rgba(0, 0, 0, 0.1);
+    }
 
-        .imagen-establecimiento {
-            max-width: 100%;
-            /* Establece el ancho máximo al 100% del contenedor */
-            height: auto;
-            /* Ajusta automáticamente la altura */
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
+    .card h5 {
+      font-size: 24px;
+    }
 
-        .detalle-establecimiento h2 {
-            color: #f39c12;
-            margin-bottom: 20px;
-        }
+    .card img {
+      width: 100%;
+      height: 200px;
+      /* Establecer una altura fija para la imagen */
+      object-fit: cover;
+    }
 
-        .detalle-establecimiento p {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
+    .card .card-body {
+      padding: 15px;
+    }
 
+    .card .parrafo {
+      height: 80px;
+      /* Establecer una altura fija para el párrafo */
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
 
+    .card .card-title {
+      height: 40px;
+      /* Establecer una altura fija para el título */
+      overflow: hidden;
+    }
 
-        .mapa {
-            height: 96.1%;
-            width: 90%;
-            margin-top: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
-        }
+    .card .card-subtitle {
+      height: 30px;
+      /* Establecer una altura fija para el subtítulo */
+      overflow: hidden;
+    }
 
-        @media (max-width: 768px) {
-            .detalle-establecimiento {
-                margin-left: 0;
-                margin-right: 0px;
-            }
+    .card .btn {
+      margin-top: 10px;
+    }
 
-            .mapa {
-                height: 300px;
-                /* Altura ajustada para pantallas medianas */
-            }
-        }
+    .card-deck .card {
+      margin-bottom: 20px;
+      width: 370px;
+      height: 370px;
+    }
 
-        @media (max-width: 576px) {
-            .mapa {
-                height: 200px;
-                /* Altura ajustada para pantallas pequeñas */
-            }
-        }
-    </style>
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .pagination button {
+      color: black;
+      background-color: #f9f9f9;
+      border: none;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+
+    .pagination button:hover {
+      background-color: yellow;
+      color: #ff0000;
+      border-radius: 5px;
+      box-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0202, 0 0 20px #ff0000;
+    }
+  </style>
 
 </head>
 
@@ -142,7 +153,7 @@ include('modales_footer.php');
                                     // Almacena los resultados en un array
                                     $informacion = $resultado->fetch_assoc();
 
-
+                                    echo ('<center>');
                                     // Muestra la información de manera detallada
                                     echo '<h2>' . htmlspecialchars($informacion['Nombre_del_establecimiento']) . '</h2>';
                                     echo isset($informacion['Direccion_de_establecimiento']) ? '<p>Dirección: ' . str_replace(['~', '¬'], ' ', htmlspecialchars($informacion['Direccion_de_establecimiento'])) . '</p>' : '';
@@ -156,7 +167,7 @@ include('modales_footer.php');
                         
                                     // Agrega una clase CSS para limitar el ancho de la imagen
                                     echo '<img src="' . $imagenUrl . '" alt="' . htmlspecialchars($informacion['Nombre_del_establecimiento']) . '" class="imagen-establecimiento">';
-                                    
+                                    echo ('</center>');
 
                                     // Puedes seguir mostrando más detalles según la estructura de tu base de datos
                                 } else {

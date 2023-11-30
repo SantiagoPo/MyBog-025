@@ -13,80 +13,80 @@ require_once('./config/conexion.php');
     <link rel="stylesheet" href="style/HeaderFooter.css">
     <link rel="stylesheet" type="text/css" href="style/informacion.css">
     <style>
-        /* Estilos CSS existentes */
+    .card {
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 15px 5px 18px rgba(0, 0, 0, 0.1);
+    }
 
-        .card {
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 15px 5px 18px rgba(0, 0, 0, 0.1);
-        }
+    .card h5 {
+      font-size: 24px;
+    }
 
-        .card h5 {
-            font-size: 24px;
-        }
+    .card img {
+      width: 100%;
+      height: 200px;
+      /* Establecer una altura fija para la imagen */
+      object-fit: cover;
+    }
 
-        .card img {
-            width: 100%;
-            height: 200px;
-            /* Establecer una altura fija para la imagen */
-            object-fit: cover;
-        }
+    .card .card-body {
+      padding: 15px;
+    }
 
-        .card .card-body {
-            padding: 15px;
-        }
+    .card .parrafo {
+      height: 80px;
+      /* Establecer una altura fija para el párrafo */
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
 
-        .card .parrafo {
-            height: 80px;
-            /* Establecer una altura fija para el párrafo */
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
+    .card .card-title {
+      height: 40px;
+      /* Establecer una altura fija para el título */
+      overflow: hidden;
+    }
 
-        .card .card-title {
-            height: 40px;
-            /* Establecer una altura fija para el título */
-            overflow: hidden;
-        }
+    .card .card-subtitle {
+      height: 30px;
+      /* Establecer una altura fija para el subtítulo */
+      overflow: hidden;
+    }
 
-        .card .card-subtitle {
-            height: 30px;
-            /* Establecer una altura fija para el subtítulo */
-            overflow: hidden;
-        }
+    .card .btn {
+      margin-top: 10px;
+    }
 
-        .card .btn {
-            margin-top: 10px;
-        }
+    .card-deck .card {
+      margin-bottom: 20px;
+      width: 370px;
+      height: 370px;
+    }
 
-        .card-deck .card {
-            margin-bottom: 20px;
-            width: 300px;
-        }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .pagination button {
+      color: black;
+      background-color: #f9f9f9;
+      border: none;
+      margin: 0 5px;
+      cursor: pointer;
+    }
 
-        .pagination button {
-            color: black;
-            background-color: #f9f9f9;
-            border: none;
-            margin: 0 5px;
-            cursor: pointer;
-        }
+    .pagination button:hover {
+      background-color: yellow;
+      color: #ff0000;
+      border-radius: 5px;
+      box-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0202, 0 0 20px #ff0000;
+    }
+  </style>
 
-        .pagination button:hover {
-            background-color: yellow;
-            color: #ff0000;
-            border-radius: 5px;
-            box-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0202, 0 0 20px #ff0000;
-        }
-    </style>
 </head>
 
 <body>

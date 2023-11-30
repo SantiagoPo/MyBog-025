@@ -66,7 +66,8 @@ require_once('./config/conexion.php');
 
     .card-deck .card {
       margin-bottom: 20px;
-      width: 300px;
+      width: 370px;
+      height: 370px;
     }
 
     .pagination {

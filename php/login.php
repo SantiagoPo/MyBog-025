@@ -15,6 +15,7 @@ try {
     }
 
     // Buscar el hash almacenado en la base de datos para el correo proporcionado
+    $rolPredeterminado = 'Usuario';
     $sql = "SELECT * FROM cuentas WHERE Email = '$email'";
     $resultado = mysqli_query($conexion, $sql);
 
@@ -36,6 +37,7 @@ try {
             $_SESSION['nombres'] = $nombresDelUsuario;
             $_SESSION['apellidos'] = $apellidosDelUsuario;
             $_SESSION['email'] = $emailDelUsuario;
+            $_SESSION['rol'] = $fila['Rol'];
 
             $loginExitoso = true;
             echo '<script> setTimeout(function(){ window.location.href = "index.php"; }, 1000); </script>';

@@ -8,7 +8,7 @@ $dotenv->load();
 try {
     // Conexión a la base de datos
     $host = $_ENV['DB_HOST'];
-    $user = $_ENV['DB_USER'];
+    $user = $_ENV['DB_USER']; // Utilizando las credenciales del nuevo usuario 'mybog_user'
     $password = $_ENV['DB_PASSWORD'];
     $database = $_ENV['DB_NAME'];
     $port = $_ENV['DB_PORT'];

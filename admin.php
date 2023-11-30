@@ -3,13 +3,13 @@
 include_once('config/conexion.php');
 
 // Verifica el correo permitido y la sesión
-$correoPermitido = 'mybog@gmail.com';
+$rolPermitido = 'Admin';
 
 function verificarAcceso()
 {
-    global $correoPermitido;
+    global $rolPermitido;
 
-    if (!isset($_SESSION['user_id']) || $_SESSION['email'] !== $correoPermitido) {
+    if (!isset($_SESSION['user_id']) || $_SESSION['rol'] !== $rolPermitido) {
         // Redirigir a una página de error o mostrar un mensaje de acceso no autorizado
         echo "Acceso no autorizado";
         exit;
@@ -82,6 +82,27 @@ function rechazarEstablecimiento($idEstablecimiento)
     $sqlRechazarEstablecimiento = "DELETE FROM registro_de_establecimiento WHERE Id_registro = $idEstablecimiento";
     $conexion->query($sqlRechazarEstablecimiento);
 }
+
+if (isset($_GET['cambiarRol']) && isset($_GET['idUsuario']) && isset($_GET['nuevoRol'])) {
+    $idUsuario = $_GET['idUsuario'];
+    $nuevoRol = $_GET['nuevoRol'];
+
+    // Evita la inyección SQL usando sentencias preparadas
+    $sqlCambiarRol = "UPDATE cuentas SET Rol = ? WHERE Id_Usuario = ?";
+    $stmt = $conexion->prepare($sqlCambiarRol);
+
+    // Vincula los parámetros y ejecuta la sentencia preparada
+    $stmt->bind_param("si", $nuevoRol, $idUsuario);
+    $stmt->execute();
+
+    // Cierra la sentencia preparada
+    $stmt->close();
+
+    // Recargar la página para reflejar los cambios
+    header('Location: admin.php');
+    exit;
+}
+
 
 ?>
 
@@ -194,6 +215,7 @@ function rechazarEstablecimiento($idEstablecimiento)
                                             <th>Nombres</th>
                                             <th>Apellidos</th>
                                             <th>Email</th>
+                                            <th>Rol</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -206,13 +228,17 @@ function rechazarEstablecimiento($idEstablecimiento)
                                             echo "<td>{$rowUsuario['Nombres']}</td>";
                                             echo "<td>{$rowUsuario['Apellidos']}</td>";
                                             echo "<td>{$rowUsuario['Email']}</td>";
+                                            echo "<td>{$rowUsuario['Rol']}</td>";
                                             echo "<td>
-                                                    <div class='d-flex align-items-center'>
-                                                        <button class='btn btn-danger' onclick='eliminarUsuario({$rowUsuario['Id_Usuario']})'>
-                                                            <i class='fas fa-trash'></i> Eliminar Usuario
-                                                        </button>
-                                                    </div>
-                                                </td>";
+    <div class='d-flex align-items-center'>
+        <button class='btn btn-danger' onclick='eliminarUsuario({$rowUsuario['Id_Usuario']})'>
+            <i class='fas fa-trash'></i> Eliminar Usuario
+        </button>
+        <button class='btn btn-primary' onclick='cambiarRolUsuario({$rowUsuario['Id_Usuario']}, \"{$rowUsuario['Rol']}\")'>
+            <i class='fas fa-edit'></i> Cambiar Rol
+        </button>
+    </div>
+</td>";
                                             echo "</tr>";
                                         }
                                         ?>
@@ -270,7 +296,8 @@ function rechazarEstablecimiento($idEstablecimiento)
                                             echo "<td>" . str_replace(['~', '¬', 'Bogotá,'], ' ', $rowEstablecimiento['Direccion_de_establecimiento']) . "</td>";
                                             echo "<td>{$rowEstablecimiento['Telefono']}</td>";
                                             echo "<td>{$rowEstablecimiento['Nit']}</td>";
-                                            echo "<td>" . str_replace(['_'], ' ', $row['localidad']) . "</td>";
+                                            echo "<td>" . str_replace(['_'], ' ', $rowEstablecimiento['localidad']) . "</td>";
+
                                             echo "<td>
                                                     <div class='d-flex align-items-center'>
                                                         <a class='btn btn-success mr-2' href='admin.php?aprobarEstablecimiento={$rowEstablecimiento['Id_registro']}'>
@@ -357,7 +384,7 @@ function rechazarEstablecimiento($idEstablecimiento)
                                             // Mostrar las imágenes
                                             for ($i = 0; $i < count($nombresImagenes); $i++) {
                                                 echo "<div class='d-flex align-items-center'>
-                                                        <a class='btn btn-primary imagen-container' href='javascript:void(0);' onclick='showImage(\"/MyBog/php/{$rutasImagenes[$i]}\")'>
+                                                        <a class='btn btn-primary imagen-container' href='javascript:void(0);' onclick='showImage(\"/MyBog/{$rutasImagenes[$i]}\")'>
                                                             <i class='fas fa-image'></i> Ver Imagen
                                                         </a>
                                                       </div>";
@@ -393,8 +420,10 @@ function rechazarEstablecimiento($idEstablecimiento)
                 </div>
             </div>
         </div>
-
     </div>
+    <br>
+    <!-- Botón para mostrar el modal de agregar discoteca -->
+    
 
 
     <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
@@ -464,7 +493,39 @@ function rechazarEstablecimiento($idEstablecimiento)
             </p>
         </nav>
     </footer>
+    <?php
+    // Verifica si se ha enviado una solicitud para cambiar el rol de un usuario
+    if (isset($_GET['cambiarRol']) && isset($_GET['idUsuario']) && isset($_GET['nuevoRol'])) {
+        $idUsuario = $_GET['idUsuario'];
+        $nuevoRol = $_GET['nuevoRol'];
 
+        // Evita la inyección SQL usando sentencias preparadas
+        $sqlCambiarRol = "UPDATE cuentas SET Rol = ? WHERE Id_Usuario = ?";
+        $stmt = $conexion->prepare($sqlCambiarRol);
+
+        // Vincula los parámetros y ejecuta la sentencia preparada
+        $stmt->bind_param("si", $nuevoRol, $idUsuario);
+        $stmt->execute();
+
+        // Cierra la sentencia preparada
+        $stmt->close();
+
+        // Recargar la página para reflejar los cambios
+        header('Location: admin.php');
+        exit;
+    }
+    ?>
+
+    <script>
+        function cambiarRolUsuario(idUsuario, rolActual) {
+    var nuevoRol = prompt("Ingrese el nuevo rol para el usuario:", rolActual);
+    if (nuevoRol !== null) {
+        // Enviar el nuevo rol al servidor
+        window.location.href = `admin.php?cambiarRol&idUsuario=${idUsuario}&nuevoRol=${encodeURIComponent(nuevoRol)}`;
+    }
+}
+
+    </script>
     <script>
         function mostrarImagenes(idEstablecimiento) {
             var imagenes = document.querySelectorAll('.imagen-container img');

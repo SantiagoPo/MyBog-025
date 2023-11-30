@@ -41,12 +41,14 @@ include('modales_footer.php');
         }
 
         .detalle-establecimiento img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
+    max-width: 100%;
+    height: 400px; /* Cambia 400px al valor deseado */
+    object-fit: cover;
+    object-position: center;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
 
         .mapa {
             height: 96.1%;
@@ -169,7 +171,7 @@ include('modales_footer.php');
                                     $informacion = $resultado->fetch_assoc();
 
                                     $ubicacion = str_replace(['~', '¬'], ' ', $informacion[$columnaUbicacion]);
-                                    echo $ubicacion;
+  echo('<center>');                                  
 
                                     // Muestra la información de manera detallada
                                     echo '<h2>' . $informacion[$columnaNombre] . '</h2>';
@@ -181,7 +183,7 @@ include('modales_footer.php');
                                     $imagenUrl = "Imagenes/$tabla/{$imagenNombre}.jpg"; // Ajusta la ruta según tu estructura
                                     echo '<img src="' . $imagenUrl . '" alt="' . $informacion[$columnaNombre] . '">';
 
-
+echo('</center>');
 
 
                                     // Puedes seguir mostrando más detalles según la estructura de tu base de datos
